@@ -1,0 +1,36 @@
+<!DOCTYPE web-app 
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" 
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+
+  <servlet>
+    <servlet-name>pullback</servlet-name>
+    <servlet-class>org.pullback.PullbackPage</servlet-class>
+    <load-on-startup>2</load-on-startup>
+  </servlet>
+  <servlet>
+    <servlet-name>pullbacks2</servlet-name>
+    <servlet-class>servletExamples.PullbackPage</servlet-class>
+    <load-on-startup>2</load-on-startup>
+  </servlet>
+  <servlet>
+    <servlet-name>pullback-service</servlet-name>
+    <servlet-class>org.pullback.PullbackService</servlet-class>
+    <load-on-startup>2</load-on-startup>
+  </servlet>
+  <!-- Standard Action Servlet Mapping -->
+  <servlet-mapping>
+    <servlet-name>pullback</servlet-name>
+    <url-pattern>/pullback</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>pullbacks2</servlet-name>
+    <url-pattern>/pullback2</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>pullback-service</servlet-name>
+    <url-pattern>/pullbacksvc</url-pattern>
+  </servlet-mapping>
+  
+</web-app>

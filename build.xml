@@ -1,0 +1,57 @@
+<project name="src2pdf" default="war">
+
+  <!-- your classpath must contain                                    -->
+  <!--    "tools.jar", scala.jar"                                     -->
+  <!--                                                                -->
+  <!--  never write classes that do not live within a package         -->
+
+  <target name="init">
+    <mkdir dir="./build/src2pdf/WEB-INF/lib"/>
+    <mkdir dir="./build/src2pdf/WEB-INF/classes"/>
+    <!-- set properties: tomcat.home, scala.home -->
+    <property file="ant.properties"/>
+    <taskdef name="scalac" classname="scala.tools.ant.Scalac"
+      classpath="${scala-library.jar}:${scala-compiler.jar}"/>
+  </target>
+
+  <!-- build:    compile servlets -->
+  <target name="build" depends="init">
+    <!-- provide servlet-api.jar in classpath, enable xml parsing -->
+    <scalac srcdir="src" destdir="./build/src2pdf/WEB-INF/classes"
+	   classpath="${scala-library.jar}:${servlet-api.jar}">
+      <include name="**/*.scala"/>
+    </scalac>
+  </target>
+
+
+  <!-- deploy:    bundles all files necessary for running servlets -->
+  <target name="deploy" depends="init, build">
+
+    <!-- copy deployment descriptor -->
+    <copy file="./descr/web.xml" todir="./build/src2pdf/WEB-INF"/>
+
+    <!-- provide servlets with Scala runtime -->
+    <copy file="${scala.home}/lib/scala-library.jar" todir="./build/src2pdf/WEB-INF/lib"/>
+
+    <!-- copy static web content -->
+    <copy todir="./build/src2pdf">
+      <fileset dir="./web"/>
+    </copy>
+  </target>
+
+  <target name="war" depends="deploy">
+    <war destfile="./build/src2pdf.war" webxml="./descr/web.xml">
+      <classes dir="./build/src2pdf/WEB-INF/classes" includes="**"/>
+      <lib file="${scala.home}/lib/scala-library.jar"/>
+      <fileset dir="./web" includes="**"/>  
+      <zipfileset dir="src/main/resources" includes="**" prefix="WEB-INF/classes/org/pullback"/>    
+    </war>
+  </target>
+
+
+  <!-- clean:    remove everything that was built,copied -->  
+  <target name="clean">
+    <delete dir="build"/>
+  </target>
+  
+</project>
