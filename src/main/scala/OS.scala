@@ -1,4 +1,4 @@
-package org.pullback
+package org.presheaf
 
 import java.io.{InputStream, BufferedOutputStream, File}
 import actors.Futures
@@ -10,6 +10,10 @@ import actors.Futures._
 
 object OS {
 
+  def log(s: String) {
+    println("" + new java.util.Date + ": " + s)
+  }
+  
   def dumper(stream: InputStream, buf: StringBuffer) =
     future(
       for (line <- scala.io.Source.fromInputStream(stream).getLines) buf.append(line)
@@ -17,14 +21,12 @@ object OS {
 
   val here = new File(".")
 
-  def run(command: String, timeout: Long = 1000, dir: File = here) = {
+  def runWithGivenEnv(command: String, timeout: Long = 1000, dir: File = here, env: Array[String] = null) = {
     val stdout = new StringBuffer
     val stderr = new StringBuffer
     val ctrlD = 4
-//  println("\n\n==command==" + command + "\n\n")
-    stdout.append("cmd=" + command)
-
-    val process = java.lang.Runtime.getRuntime.exec(command, null, dir)
+//    stdout.append(here.getAbsolutePath + "> " + command)
+    val process = java.lang.Runtime.getRuntime.exec(command, env, dir)
     val processIn = new BufferedOutputStream(process.getOutputStream)
     for (i <- 1 to 10) processIn.write(ctrlD)
 
@@ -43,6 +45,16 @@ object OS {
     }
   }
 
+    def run(command: String, timeout: Long = 1000, dir: File = here, env: Map[String, String] = null) = {
+      if (env == null) {
+        runWithGivenEnv(command, timeout, dir, null)
+      } else {
+        val envForRuntime = (initialEnv ++ env).toArray.map(p => p._1 + "=" + p._2)
+        log(here.getAbsolutePath + "> " + command + "," + (if (env == null) "no env" else "\nenv=" + env.mkString(",")))
+        runWithGivenEnv(command, timeout, dir, envForRuntime)
+      }
+    }
+
   def ln(target: File, link: File) {
     run("ln -s " + target.getAbsolutePath + " " + link.getAbsolutePath)
   }
@@ -53,5 +65,11 @@ object OS {
 
   def cp(source: File, target: File) {
     run("cp " + source.getAbsolutePath + " " + target.getAbsolutePath)
+  }
+
+  lazy val initialEnv = {
+    val envString = runWithGivenEnv("env")._2
+    val envArray = envString.split("\n")
+    Map(envArray.map(_.split("=")).filter(_.length == 2).map((a:Array[String]) => a(0) -> a(1)): _*)
   }
 }
