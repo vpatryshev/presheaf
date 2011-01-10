@@ -1,0 +1,57 @@
+cp /etc/apt/sources.list tmp.tmp 
+echo "deb http://us.archive.ubuntu.com/ubuntu/ maverick-updates multiverse" >> tmp.tmp
+echo "deb-src http://us.archive.ubuntu.com/ubuntu/ maverick-updates multiverse" >>tmp.tmp
+sudo cp tmp.tmp /etc/apt/sources.list
+rm tmp.tmp
+
+sudo useradd -d /home/presheaf -m presheaf
+sudo passwd presheaf
+
+sudo apt-get -qy update
+sudo apt-get -qy install texlive-full
+sudo apt-get -qy install rpm
+
+mkdir download
+
+cd download
+
+#JDKBIN=jdk6.bin
+
+#curl https://s3-us-west-1.amazonaws.com/vpatryshev/jdk-6u23-linux-i586.bin >$JDKBIN
+#chmod 755 $JDKBIN
+
+#sh $JDKBIN
+#sudo mkdir $JDKPATH
+#sudo mv $JDKFOLDER $JDKPATH
+
+#chmod +x $JDKFILE
+#sh $JDKFILE
+
+#JDKFOLDER=`ls | grep jdk1\.`
+#JDKPATH=/usr/local/java/6.23
+
+#echo "export JAVA_HOME=$JDKPATH" >> ~/.bashrc
+#echo "PATH=\$JAVA_HOME/bin:\$JAVA_HOME/jre/bin:\$PATH" >> ~/.bashrc
+cd ~
+
+sudo apt-get install mc
+
+source ~ubuntu/.bashrc
+java -version
+sudo apt-get -qy install tomcat6-admin
+sudo apt-get -qy install tomcat6-examples
+sudo apt-get -qy install tomcat6
+sudo mkdir /usr/share/tomcat6/logs
+sudo apt-get install vsftpd
+sudo iptables -A INPUT -i eth0 -p tcp --dport 80 -j ACCEPT
+sudo iptables -A INPUT -i eth0 -p tcp --dport 8080 -j ACCEPT
+sudo iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8080 
+sudo iptables -t nat -A OUTPUT -d ec2-50-16-140-142.compute-1.amazonaws.com -p tcp --dport 80 -j REDIRECT --to-ports 8080
+sudo iptables -t nat -A PREROUTING -d ec2-50-16-140-142.compute-1.amazonaws.com -p tcp --dport 80 -j REDIRECT --to-ports 8080
+curl http://myjavatools.com/projects/src2pdf/updatewar.sh >updatewar.sh
+curl http://myjavatools.com/projects/src2pdf/updatewar.ftp >updatewar.ftp
+ln -s /var/lib/tomcat6 tomcat
+ln -s /var/log/tomcat6 tomcatlogs
+
+
+

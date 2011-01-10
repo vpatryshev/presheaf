@@ -44,7 +44,6 @@
       <classes dir="./build/src2pdf/WEB-INF/classes" includes="**"/>
       <lib file="${scala.home}/lib/scala-library.jar"/>
       <fileset dir="./web" includes="**"/>  
-      <zipfileset dir="src/main/resources" includes="**" prefix="WEB-INF/classes/org/pullback"/>    
     </war>
   </target>
 

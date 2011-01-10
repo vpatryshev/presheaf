@@ -1,0 +1,27 @@
+request a spot instance ami-1a837773
+when started, right-click the "running" in "instances" tab
+ssh there
+
+ssh -i src2pdf20101223.pem ubuntu@ec2-50-16-136-190.compute-1.amazonaws.com
+
+curl http://myjavatools.com/projects/src2pdf/ec2setup>ec2setup;sh ec2setup
+
+(not sure about the following)
+fix /etc/tomcat:
+sudo nano /etc/tomcat6/tomcat-users.xml
+add the user
+
+htsecurity groups, setup port 8080: 
+
+http://www.webappsolution.com/wordpress/2009/05/07/installing-tomcat-in-a-sensible-way-in-ec2-cloud-machine-part-4-final/
+
+create ~/.netrc
+machine myjavatools.com
+login myjavatools
+password you know
+chmod 600 ~/.netrc
+
+sudo ./updatewar.sh
+
+sudo /usr/share/tomcat6/bin/shutdown.sh
+

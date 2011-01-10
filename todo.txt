@@ -1,0 +1,16 @@
+todo
+
++ remove chars < ' ' from text 
++ file names m.b. mda
++ use scp
+- wtf with stale classes in tomcat?!
+- have a script instead of chain of commands
+- git
+- figure out what's wrong with this: T[T[X]] \ar[r]^{m_X} \ar[d]_{T[T[f]]} &T[X]\ar[d]^{T[f]}\\ T[T[Y]] \ar[r]^{m_Y} &T[Y]
+- make sure root app update works (whatever)
+- all examples from xydoc
+- make it run locally
+- store session, show last instances
+- ajax?
+- try to find a micro ubuntu
+
