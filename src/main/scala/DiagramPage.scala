@@ -7,7 +7,7 @@ import java.io._
 
 class DiagramPage extends ScalaHttpServlet {
   val sample = "X \\ar@/_2pc/[rr]_{f;g} \\ar[r]^f &Y \\ar[r]^g &Z\\"
-  val version = "1.000f"
+  val version = "1.0015"
 
   def notNull(value: String, default: String) = if (value == null) default else value
 
@@ -50,7 +50,7 @@ class DiagramPage extends ScalaHttpServlet {
     val workDir = new File(context.getRealPath("cache"))
     workDir.mkdirs
     val renderer = new DiagramRenderer(workDir)
-    renderer.process(diagram)
+    renderer.process(diagram, req.getParameter("opt"))
   }
 
   def doGetXML(req:HttpServletRequest) = {

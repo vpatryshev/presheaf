@@ -29,7 +29,7 @@ class DiagramService extends HttpServlet {
     val workDir = new File(req.getSession().getServletContext().getRealPath("/"), "cache")
     workDir.mkdirs
     val renderer = new DiagramRenderer(workDir)
-    renderer.process(diagram)
+    renderer.process(diagram, req.getParameter("opt"))
   }
 
   def doGetXML(req:HttpServletRequest) = {

@@ -42,9 +42,32 @@ class DiagramRenderer(val cache: File) {
 
   def nameFileFor(tex: String) = "d" + DiagramRenderer.md5(tex)
 
-  def process(sourceDiagram: String) = {
+  def process(sourceDiagram: String, opt: String) = {
     val diagram = DiagramRenderer.decode(sourceDiagram)
-    val file = new File(cache, nameFileFor(diagram) + ".tex")
+    val name = nameFileFor(diagram)
+    val file = new File(cache, name + ".tex")
+    val img: File = withExtension(file, "png")
+    val pdf: File = withExtension(file, "pdf")
+    if (img.exists) (diagram, img, pdf, new ListBuffer[Node])
+    else            doWithScript(diagram, name)
+  }
+
+  def doWithScript(diagram: String, name: String) = {
+    val file = new File(cache, name + ".tex")
+    val img: File = withExtension(file, "png")
+    val pdf: File = withExtension(file, "pdf")
+    val log = new ListBuffer[Node]
+    val pw = new FileOutputStream(file)
+    pw.write(XYDiagram.buildTex(diagram).getBytes())
+    pw.close
+
+    val command  = "/home/ubuntu/doxy.sh "  + name
+    runM("coxy" -> command, log, DiagramRenderer.env)
+    (diagram, img, pdf, log)
+  }
+
+  def doWithSeqOfCommands(diagram: String, name: String) = {
+    val file = new File(cache, name + ".tex")
     val img: File = withExtension(file, "png")
     val pdf: File = withExtension(file, "pdf")
     val eps: File = withExtension(file, "eps")
@@ -64,7 +87,7 @@ class DiagramRenderer(val cache: File) {
            val r2 <- runM("dvips"    ->  dvipsCommand, log, DiagramRenderer.env) if r2 == 0;
            val r3 <- runM("epstopdf" ->    epsCommand, log, DiagramRenderer.env) if r3 == 0;
            val r4 <- runM("dvipng"   -> dvipngCommand, log, DiagramRenderer.env) if r4 == 0) {
-        delete(file, List("tex", "log", "aux", "dvi", "eps"))
+//        delete(file, List("log", "aux", "dvi", "eps"))
       }
     }
     (diagram, img, pdf, log)
@@ -136,6 +159,7 @@ object DiagramRenderer {
 
   import java.security._
   private val digest = MessageDigest.getInstance("MD5")
+  digest.reset
   def encode(b: Byte) = java.lang.Integer.toString(b & 0xff, 36)
 
   def md5(message: String) = {
