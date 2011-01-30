@@ -1,0 +1,147 @@
+X \\ar@/_2pc/[rr]_{f;g} \\ar[r]^f &Y \\ar[r]^g &Z\\
+
+X \\ar[r]^f &Y \\ar[r]^g &Z
+
+T: X \\ar@{|->}[r] &Y\\
+
+F: (f: A \\ar[r] &B) \\ar@{|->}[r] & (F[f]: F[A] \\ar[r] &F[B])
+
+X \\ar@/_3pc/[rrr]^{f;g} \\ar[r]^f &T[Y] \\ar[r]^{T[g]} &T[T[Z]] \\ar[r]^{m_Z} &T[Z]
+
+ T[T[X]] \\ar[r]^{m_X} \\ar[d]_{T[T[f]]} &T[X]\\ar[d]^{T[f]}\\\\
+ T[T[Y]] \\ar[r]^{m_Y}
+          &T[Y]\\\\
+
+ u_X: X \\ar[r] &T[X]\\\\ m_X: T[T[X]] \\ar[r] &T[X]\\\\
+
+ X \\ar@/_1pc/[rrd]^{_{f;g}} \\ar[r]^{_f} &List[Y] \\ar[r]^{_{List[g]}} &List[List[Z]] \\ar[d]_{_{flatten}}\\\\ 
+&&List[Z]
+
+&Y_1 \\ar@{_(->}[d] \\ar[r]^{g}           &Z \\ar@{_(->}[d] \\\\
+ X_1 \\ar@{_(->}[d] \\ar[r]^{f}            &Y   \\ar@{_(->}[d] \\ar[r]^{Opt[g]} &{Opt[Z]}\\\\
+ X                 \\ar[r]^{Opt[f]} &{Opt[Y]}
+
+U \ar@/_/[ddr]_y \ar@/^/[drr]^x
+\ar@{.>}[dr]|-{(x,y)}
+& X \times_Z Y \ar[d]^q \ar[r]_p
+& X \ar[d]_f
+& Y \ar[r]^g
+& Z
+\\
+\\
+
+A &*+[F]{\sum_{i=n}^m {i^2}} \\
+& {\bullet} & D \ar[ul]
+
+
+\ar @{} [dr] |{=}
+A \ar[d] \ar[r] & B \ar[d] \\
+B \ar[r]
+& C
+
+
+
+A \ar@<1ex>[dr]^a_{.} \\
+& B \ar@<1ex>[ul]^b \ar@<1ex>[r]^c
+& C \ar@<1ex>[l]^d_{.} 
+
+ A \\
+B & C \ar@<1ex>[ul]
+\ar@<1ex>[ul];[] 
+
+
+{\circ}
+\ar@{|-->} [dr] ^a
+[rr]+D*{\bullet} ^b
+[drrr] ^c
+& {\circ} & {\circ} & {\circ} \\
+{\circ} & {\circ} & {\circ} & {\circ} 
+
+
+{\circ} \ar r[d]
+^a
+[rr]
+^b
+/4pt[rr] ^c
+[rrr]
+^d
+_dl[drrr]^e
+[drrr]^f
+& {\circ} & {\circ} & {\circ} \\
+{\circ} & {\circ} & {\circ} & {\circ} 
+
+ A \ar @{=|>} [r] & B 
+
+
+A \ar@{-}[dr]
+&{}\save[]+<3cm,0cm>*\txt<8pc>{%
+This is a very big commentary
+but it does not otherwise affect
+the diagram.}
+\ar[l] \ar[d] \restore \\
+& B \ar@{-}[r] & C \ar@{-}[r] & D
+
+
+
+*\txt{A very long and stupid\\program}
+\ar[rr]^-{\txt{weird\\arrow}}
+&&*\txt<2pc>{Com\-pli\-cated\\Code}
+
+ A \ar @{>->} @< 2pt> [r]
+\ar @{ >->} @<-2pt> [r] & B 
+
+
+\g1 A\ar[r]&B\ar[d]&\g2 A\ar[r]&B\ar[d]\\
+C\ar[u]&D\ar[l]&
+C\ar[u]&D\ar[l]
+\ar @{.>} "g1" ;"1,4"
+\ar @{-->} "2,1";"g2" 
+
+
+{\bullet} \ar@{--}[d]\ar@{=}[dr]\ar@{-}[r]
+& {\bullet} \ar@{.}[d] \\
+{\bullet} & {\bullet} \ar[l] 
+
+
+A \ar @/^/ @{^{<}-_{>}} [r]
+\ar @/_/ @{{*}{x}{*}} [r] & B 
+
+
+A \ar[r]^f \ar[dr]_{f;g}
+& B \ar[d]^g \ar[dr]^{g;h} \\
+& C \ar[r]_h & D
+
+
+
+1 \ar[rr] ^-{1000000x}
+\ar[dr] _(.2){2000x} |!{[d];[rr]}\hole
+&& 1000000 \\
+1000 \ar[r] _{2x}
+\ar[urr] _>>>>{x^2}
+& 2000 
+
+
+x \ar@(ul,dl)[]|{id} \ar@/^/[rr]|f
+&& f(x) \ar@/^/[ll]|{f^{-1}} 
+
+
+A \ar[d]_f \ar[r]^f
+& B \ar[dl]|{i_B} \ar[d]^g \\
+B \ar[r]_g & C 
+
+
+*=0{\bullet}
+\ar@/^/[dr]!U|1
+\ar@/^/[drr]!U|2
+\ar@/^/[drrr]!U|3
+\\
+&*+[F]\txt{x}
+&*+[F]\txt{x\\x}
+&*+[F]\txt{x\\x\\x}
+
+
+
+A \ar[r] ^a="a" & B \ar[r] ^b="b" & C
+\ar @/^/ "a";"b" 
+
+
