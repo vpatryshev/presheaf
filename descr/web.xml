@@ -5,32 +5,36 @@
 <web-app>
 
   <servlet>
-    <servlet-name>pullback</servlet-name>
-    <servlet-class>org.pullback.PullbackPage</servlet-class>
+    <servlet-name>diagrampage</servlet-name>
+    <servlet-class>org.presheaf.DiagramPage</servlet-class>
     <load-on-startup>2</load-on-startup>
   </servlet>
+
   <servlet>
-    <servlet-name>pullbacks2</servlet-name>
-    <servlet-class>servletExamples.PullbackPage</servlet-class>
+    <servlet-name>diagramsamples</servlet-name>
+    <servlet-class>org.presheaf.DiagramSamples</servlet-class>
     <load-on-startup>2</load-on-startup>
   </servlet>
+
   <servlet>
-    <servlet-name>pullback-service</servlet-name>
-    <servlet-class>org.pullback.PullbackService</servlet-class>
+    <servlet-name>diagramservice</servlet-name>
+    <servlet-class>org.presheaf.DiagramService</servlet-class>
     <load-on-startup>2</load-on-startup>
   </servlet>
-  <!-- Standard Action Servlet Mapping -->
+
   <servlet-mapping>
-    <servlet-name>pullback</servlet-name>
-    <url-pattern>/pullback</url-pattern>
+    <servlet-name>diagrampage</servlet-name>
+    <url-pattern>/main</url-pattern>
   </servlet-mapping>
+
   <servlet-mapping>
-    <servlet-name>pullbacks2</servlet-name>
-    <url-pattern>/pullback2</url-pattern>
+    <servlet-name>diagramsamples</servlet-name>
+    <url-pattern>/samples</url-pattern>
   </servlet-mapping>
+
   <servlet-mapping>
-    <servlet-name>pullback-service</servlet-name>
-    <url-pattern>/pullbacksvc</url-pattern>
+    <servlet-name>diagramservice</servlet-name>
+    <url-pattern>/dws</url-pattern>
   </servlet-mapping>
-  
+
 </web-app>
