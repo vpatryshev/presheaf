@@ -1,8 +1,17 @@
-request a spot instance ami-1a837773
+https://www.amazon.com/ap/signin?openid.assoc_handle=aws&openid.return_to=https%3A%2F%2Fconsole.aws.amazon.com%2Fec2%2Flogin!doAuthenticate&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&action=&disableCorpSignUp=&clientContext=&marketPlaceId=&poolName=&authCookies=&pageId=aws.ssop&siteState=&accountStatusPolicy=P1&sso=&openid.pape.preferred_auth_policies=MultifactorPhysical&openid.pape.max_auth_age=43200&openid.ns.pape=http%3A%2F%2Fspecs.openid.net%2Fextensions%2Fpape%2F1.0&server=%2Fap%2Fsignin%3Fie%3DUTF8&accountPoolAlias=
+
+#request a spot instance ami-1a837773 (small)
+
+request ami-1234de7b
+ (see http://ubuntu-smoser.blogspot.com/2010/09/running-ubuntu-on-amazon-micro-instance.html)
+
+Tried default amazon for micro (ami8c1fece5)
 when started, right-click the "running" in "instances" tab
 ssh there
 
-ssh -i src2pdf20101223.pem ubuntu@ec2-50-16-136-190.compute-1.amazonaws.com
+see also http://yoodey.com/removing-openjdk-jre-ubuntu-1010-ec2-amazon-and-install-sun-java-6-jre-jdk
+
+ssh -i src2pdf20101223.pem ubuntu@ec2-(ip s/\./-/g).compute-1.amazonaws.com
 
 curl http://myjavatools.com/projects/src2pdf/ec2setup>ec2setup;sh ec2setup
 

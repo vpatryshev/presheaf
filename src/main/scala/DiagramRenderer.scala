@@ -12,6 +12,8 @@ import javax.servlet.ServletContext
  */
 class DiagramRenderer(val cache: File) {
 
+  def asXhtml(s: String): Array[Node] = s split "\\n" flatMap {x =>  List(Text(x), <br/>)}
+
   def log(action: (String, String), results: (Option[Int], String, String)): Seq[Node] = {
     results._1 match {
       case Some(0) => Text("")
@@ -19,8 +21,8 @@ class DiagramRenderer(val cache: File) {
       case _       => {
         <p>{ Text(action._1) } = "{ Text(action._2) }"</p>
         <p>result = { Text(results._1.toString) }</p>
-        <p>log = { Text(results._2.replaceAll("\\n", "<br/>")) }</p>
-        <p><font color="red">err = { Text(results._3.replaceAll("\\n", "<br/>")) }</font></p>
+        <p>log = { asXhtml(results  ._2) }</p>
+        <p><font color="red">err = { asXhtml(results._3) }</font></p>
       }
     }
   }
@@ -42,18 +44,26 @@ class DiagramRenderer(val cache: File) {
 
   def nameFileFor(tex: String) = "d" + DiagramRenderer.md5(tex)
 
-  def process(sourceDiagram: String, opt: String) = {
-    val diagram = DiagramRenderer.decode(sourceDiagram)
-    val name = nameFileFor(diagram)
-    val file = new File(cache, name + ".tex")
-    val img: File = withExtension(file, "png")
-    val pdf: File = withExtension(file, "pdf")
-    if (img.exists) (diagram, img, pdf, new ListBuffer[Node])
-    else            doWithScript(diagram, name)
+  def process(sourceDiagram: String, opt: String) : (String, File, File, Iterable[Node]) = {
+    if (sourceDiagram == null) {
+      (null, null, null, List(Text("No diagram provided")))
+    } else {
+      val diagram = DiagramRenderer.decode(sourceDiagram)
+      val name = nameFileFor(diagram)
+      val file = new File(cache, name + ".tex")
+      val img: File = withExtension(file, "png")
+      val pdf: File = withExtension(file, "pdf")
+      if (img.exists) (diagram, img, pdf, new ListBuffer[Node])
+      else             doWithScript(diagram, name)
+
+    }
   }
 
   def doWithScript(diagram: String, name: String) = {
     val file = new File(cache, name + ".tex")
+//    if (!file.exists) {
+//      throw new RuntimeException("Weird directory " + file.getParentFile.getAbsolutePath)/f
+//    }
     val img: File = withExtension(file, "png")
     val pdf: File = withExtension(file, "pdf")
     val log = new ListBuffer[Node]
@@ -61,37 +71,12 @@ class DiagramRenderer(val cache: File) {
     pw.write(XYDiagram.buildTex(diagram).getBytes())
     pw.close
 
+    
     val command  = "/home/ubuntu/doxy.sh "  + name
-    runM("coxy" -> command, log, DiagramRenderer.env)
+    runM("doxy.sh" -> command, log, DiagramRenderer.env)
     (diagram, img, pdf, log)
   }
 
-  def doWithSeqOfCommands(diagram: String, name: String) = {
-    val file = new File(cache, name + ".tex")
-    val img: File = withExtension(file, "png")
-    val pdf: File = withExtension(file, "pdf")
-    val eps: File = withExtension(file, "eps")
-    val dvi: File = withExtension(file, "dvi")
-    val log = new ListBuffer[Node]
-
-    if (!withExtension(file, "png").exists) {
-      val pw = new FileOutputStream(file)
-      pw.write(XYDiagram.buildTex(diagram).getBytes())
-      pw.close
-
-      val latexCommand  = DiagramRenderer.binPath + "latex -output-directory=" + cache.getAbsolutePath + " " + file.getAbsolutePath
-      val dvipsCommand  = DiagramRenderer.binPath + "dvips -E -o " + eps + " " + dvi
-      val epsCommand    = DiagramRenderer.binPath + "epstopdf " + eps
-      val dvipngCommand = DiagramRenderer.binPath + "dvipng -T tight -o " + img + " " + dvi
-      for (val r1 <- runM("latex"    ->  latexCommand, log, DiagramRenderer.env) if r1 == 0;
-           val r2 <- runM("dvips"    ->  dvipsCommand, log, DiagramRenderer.env) if r2 == 0;
-           val r3 <- runM("epstopdf" ->    epsCommand, log, DiagramRenderer.env) if r3 == 0;
-           val r4 <- runM("dvipng"   -> dvipngCommand, log, DiagramRenderer.env) if r4 == 0) {
-//        delete(file, List("log", "aux", "dvi", "eps"))
-      }
-    }
-    (diagram, img, pdf, log)
-  }
 }
 
 object DiagramRenderer {
@@ -135,7 +120,7 @@ object DiagramRenderer {
         withinSlash = !withinSlash
         buf.append(if (withinSlash) "((" else "))")
       } else {
-        buf.append(if (c == '&') "|" else if (c == '@') "()" else c)
+        buf.append(if (c == '&') "__" else if (c == '@') "()" else c)
       }
     }
 
@@ -143,18 +128,13 @@ object DiagramRenderer {
   }
 
   def decode(xy: String) = {
-    val buf = new StringBuilder
-    var withinCurly = false
-    for (c <- xy.replaceAll("\\(\\(", "/").replaceAll("\\)\\)", "/").replaceAll("\\(\\)", "@").replaceAll(".,", ";")) {
-      withinCurly |= c == '{'
-      withinCurly &= c != '}'
-      if (withinCurly) {
-        buf.append(c)
-      } else {
-        buf.append(if (c == '|') '&' else c)
-      }
-    }
-    buf.toString
+    if (xy == null) null else
+    xy.replaceAll("\\(\\(", "/")
+      .replaceAll("\\)\\)", "/")
+      .replaceAll("\\(\\)", "@")
+      .replaceAll(".,", ";")
+      .replaceAll("__", "&")
+      .replaceAll("\n", " ")
   }
 
   import java.security._

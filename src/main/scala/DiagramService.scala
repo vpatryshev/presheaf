@@ -1,70 +1,47 @@
 package org.presheaf
 
-import java.io.{File}
+import org.presheaf.HtmlSnippets._
 import javax.servlet.http._
-import scala.xml._
+import xml.Node
+import java.io.File
 
-class DiagramService extends HttpServlet {
-  def notNull(value: String, default: String) = if (value == null) default else value
+class DiagramService extends PresheafServlet {
 
-  def ref(file: File) = "cache/" + file.getName
-
-  def fileAsAttr(attr: String, file: File) =
-    new UnprefixedAttribute(attr, ref(file), Null)
-
-  def page(ns: Seq[Node]) = {
-    <html>
-      <head>
-        <title>Formatting Your Diagram AAS ver.2</title>
-      </head>
-      <body>
-        { ns }
-     </body>
-   </html>
+  def page(diagram: String, imgRef: String, pdfRef: String, logs: Seq[Node]) = {
+    <xml>
+      <diagram>
+        <source>{  diagram }</source>
+        <image>{   imgRef  }</image>
+        <pdf>{     pdfRef  }</pdf>
+        <logs>{    logs    }</logs>
+        <version>{ version }</version>
+      </diagram>
+    </xml>
   }
 
-  def process(req:HttpServletRequest) = {
-    val diagram = notNull(req.getParameter("in"), "")
-    val out = notNull(req.getParameter("out"), "")
-    val workDir = new File(req.getSession().getServletContext().getRealPath("/"), "cache")
-    workDir.mkdirs
-    val renderer = new DiagramRenderer(workDir)
-    renderer.process(diagram, req.getParameter("opt"))
-  }
+  val Q = "\""
+  def quote(s: String) = Q + s.replaceAll(Q, "") + Q
+  def attr(nvp: (String,Object)) = nvp._1 + ":" + quote(nvp._2.toString)
+  def json(map: Map[String, Object]) = map.map(attr _).mkString("{", ",", "}")
 
-  def doGetXML(req:HttpServletRequest) = {
-
-    val format = notNull(req.getParameter("format"), "xy")
-
-    val (diagram, imgRef, pdfRef, logs) = process(req)
-    val img = <img/> % fileAsAttr("src", imgRef)
-    val pdfHref = <a>pdf</a> % fileAsAttr("href", pdfRef)
-
-      page(<p>{ img }</p>
-           <p>{ pdfHref }</p>
-           <p> { logs }</p>)
-  }
-
-  final override def doGet(req:HttpServletRequest, res:HttpServletResponse) : Unit = {
+  override def doGet(req:HttpServletRequest, res:HttpServletResponse) : Unit = {
+    val (diagram, img, pdf, logs) : (String, File, File, Iterable[Node]) = process(req)
     res.setContentType("text/html")
-    res.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY)
-    val out = if ("pdf" == req.getParameter("out")) process(req)._3 else process(req)._2
-    res.setHeader("Location", ref(out))
+    req.getParameter("out") match {
+      case "png" => 
+        res.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY)
+        res.setHeader("Location", ref(img))
+
+      case "pdf" => 
+        res.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY)
+        res.setHeader("Location", ref(pdf))
+
+      case _ =>
+        res.getWriter.print(json(
+          Map("source"  -> diagram,
+              "image"   -> ref(img),
+              "pdf"     -> ref(pdf),
+              "logs"    -> (logs map (_.toString)),
+              "version" -> version)))}
   }
-
-//  override def init():Unit = {
-//    super.init
-//    println("=====================DiagramService plain init=====================")
-//  }
-//  override def init(sc:javax.servlet.ServletConfig):Unit = {
-//    super.init(sc)
-//    println("=====================DiagramService alt init=====================")
-//  }
-  override def service(req:javax.servlet.http.HttpServletRequest,
-              resp:javax.servlet.http.HttpServletResponse) =
-                super.service(req, resp):Unit ;
-
-//  override def service(req:javax.servlet.ServletRequest,
-//              resp:javax.servlet.ServletResponse):Unit =
-//                super.service(req,resp);
- }
+}

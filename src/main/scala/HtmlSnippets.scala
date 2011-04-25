@@ -8,12 +8,12 @@ object HtmlSnippets {
 
   def oneSample(xy: String) =
     <tr>
-      <td>{ img("dws?in=" + DiagramRenderer.encode(xy)) }</td>
+      <td>{ img("dws?out=png&in=" + DiagramRenderer.encode(xy)) }</td>
       <td>{ xy }</td>
     </tr>
 
   def buildNo: String = {
-    for (v <- scala.io.Source.fromInputStream(getClass.getResourceAsStream("/buildno.txt")).getLines()) {
+    for (v <- Res.read("/buildno.txt").getLines()) {
       return "0000".substring(4 - v.length) + v
     }
     "?"

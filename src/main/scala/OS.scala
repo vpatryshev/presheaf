@@ -1,14 +1,14 @@
 package org.presheaf
 
-import java.io.{InputStream, BufferedOutputStream, File}
 import actors.Futures
 import actors.Futures._
+import java.io.{IOException, InputStream, BufferedOutputStream, File}
 
 /**
  * OS - represents Operating System
  */
 
-object OS {
+object  OS {
 
   def log(s: String) {
     println("" + new java.util.Date + ": " + s)
@@ -16,7 +16,11 @@ object OS {
   
   def dumper(stream: InputStream, buf: StringBuffer) =
     future(
-      for (line <- scala.io.Source.fromInputStream(stream).getLines) buf.append(line)
+      try {
+        for (line <- scala.io.Source.fromInputStream(stream).getLines) buf.append(line)
+      } catch {
+        case ioe: Any => buf.append('\n').append(ioe.getMessage).append(ioe)
+      }
     )
 
   val here = new File(".")
@@ -65,6 +69,10 @@ object OS {
 
   def cp(source: File, target: File) {
     run("cp " + source.getAbsolutePath + " " + target.getAbsolutePath)
+  }
+
+  def whoami: String = {
+    run("whoami")._2.toString
   }
 
   lazy val initialEnv = {

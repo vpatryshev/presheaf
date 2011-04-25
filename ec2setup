@@ -6,10 +6,11 @@ rm tmp.tmp
 
 sudo useradd -d /home/presheaf -m presheaf
 sudo passwd presheaf
+export GET="sudo apt-get -qy install"
 
 sudo apt-get -qy update
-sudo apt-get -qy install texlive-full
-sudo apt-get -qy install rpm
+$GET texlive-full
+$GET rpm
 
 mkdir download
 
@@ -34,22 +35,27 @@ cd download
 #echo "PATH=\$JAVA_HOME/bin:\$JAVA_HOME/jre/bin:\$PATH" >> ~/.bashrc
 cd ~
 
-sudo apt-get install mc
+## doxy.sh missing!
+## doxy.sh should have a+x
+## same for deploy.sh
+
+mkdir diagrams
+chmod a+x,a+r,a+w diagrams
+sudo apt-get -qy install mc
 
 source ~ubuntu/.bashrc
 java -version
-sudo apt-get -qy install tomcat6-admin
-sudo apt-get -qy install tomcat6-examples
-sudo apt-get -qy install tomcat6
+$GET tomcat6-admin
+$GET tomcat6-examples
+$GET tomcat6
 sudo mkdir /usr/share/tomcat6/logs
+sudo ln -s diagrams /usr/share/tomcat6/webapps/cache
 sudo apt-get install vsftpd
 sudo iptables -A INPUT -i eth0 -p tcp --dport 80 -j ACCEPT
 sudo iptables -A INPUT -i eth0 -p tcp --dport 8080 -j ACCEPT
 sudo iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8080 
 sudo iptables -t nat -A OUTPUT -d ec2-50-16-140-142.compute-1.amazonaws.com -p tcp --dport 80 -j REDIRECT --to-ports 8080
 sudo iptables -t nat -A PREROUTING -d ec2-50-16-140-142.compute-1.amazonaws.com -p tcp --dport 80 -j REDIRECT --to-ports 8080
-curl http://myjavatools.com/projects/src2pdf/updatewar.sh >updatewar.sh
-curl http://myjavatools.com/projects/src2pdf/updatewar.ftp >updatewar.ftp
 ln -s /var/lib/tomcat6 tomcat
 ln -s /var/log/tomcat6 tomcatlogs
 

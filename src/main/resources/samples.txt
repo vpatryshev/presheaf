@@ -1,34 +1,41 @@
-X \\ar@/_2pc/[rr]_{f;g} \\ar[r]^f &Y \\ar[r]^g &Z\\
+& \lambda\omega \ar@{-} [rr] \ar@{-} [dd]
+& & \lambda C \ar@{-}[dd]
+\\
+\lambda2 \ar@{-}[ur]\ar@{-}[rr]\ar@{-}[dd]
+& & \lambda P2 \ar@{-}[ur]\ar@{-}[dd]
+\\
+& \lambda\underline\omega \ar@{-}[rr]
+& & \lambda P\underline\omega
+\\
+\lambda{\to} \ar@{-}[rr]\ar@{-}[ur]
+& & \lambda P \ar@{-}[ur] \\
 
-X \\ar[r]^f &Y \\ar[r]^g &Z
+X \ar@/_2pc/[rr]_{f;g} \ar[r]^f &Y \ar[r]^g &Z\\
 
-T: X \\ar@{|->}[r] &Y\\
+X \ar[r]^f &Y \ar[r]^g &Z
 
-F: (f: A \\ar[r] &B) \\ar@{|->}[r] & (F[f]: F[A] \\ar[r] &F[B])
+T: X \ar@{|->}[r] &Y\\
 
-X \\ar@/_3pc/[rrr]^{f;g} \\ar[r]^f &T[Y] \\ar[r]^{T[g]} &T[T[Z]] \\ar[r]^{m_Z} &T[Z]
+F: (f: A \ar[r] &B) \ar@{|->}[r] & (F[f]: F[A] \ar[r] &F[B])
 
- T[T[X]] \\ar[r]^{m_X} \\ar[d]_{T[T[f]]} &T[X]\\ar[d]^{T[f]}\\\\
- T[T[Y]] \\ar[r]^{m_Y}
-          &T[Y]\\\\
+X \ar@/_3pc/[rrr]^{f;g} \ar[r]^f &T[Y] \ar[r]^{T[g]} &T[T[Z]] \ar[r]^{m_Z} &T[Z]
 
- u_X: X \\ar[r] &T[X]\\\\ m_X: T[T[X]] \\ar[r] &T[X]\\\\
+ T[T[X]] \ar[r]^{m_X} \ar[d]_{T[T[f]]} &T[X]\\ar[d]^{T[f]}\\
 
- X \\ar@/_1pc/[rrd]^{_{f;g}} \\ar[r]^{_f} &List[Y] \\ar[r]^{_{List[g]}} &List[List[Z]] \\ar[d]_{_{flatten}}\\\\ 
-&&List[Z]
+ T[T[Y]] \ar[r]^{m_Y} &T[Y]\\
 
-&Y_1 \\ar@{_(->}[d] \\ar[r]^{g}           &Z \\ar@{_(->}[d] \\\\
- X_1 \\ar@{_(->}[d] \\ar[r]^{f}            &Y   \\ar@{_(->}[d] \\ar[r]^{Opt[g]} &{Opt[Z]}\\\\
- X                 \\ar[r]^{Opt[f]} &{Opt[Y]}
+ u_X: X \ar[r] &T[X]\\ m_X: T[T[X]] \ar[r] &T[X]\\
+
+X \ar@/_1pc/[rrd]^{_{f;g}} \ar[r]^{_f} &List[Y] \ar[r]^{_{List[g]}} &List[List[Z]] \ar[d]_{_{flatten}}\\ &&List[Z]
+
+&Y_1 \ar@{_(->}[d] \ar[r]^{g}           &Z \ar@{_(->}[d] \\
+ X_1 \ar@{_(->}[d] \ar[r]^{f}           &Y \ar@{_(->}[d] \ar[r]^{Opt[g]} &{Opt[Z]}\\
+ X                 \ar[r]^{Opt[f]} &{Opt[Y]}
 
 U \ar@/_/[ddr]_y \ar@/^/[drr]^x
-\ar@{.>}[dr]|-{(x,y)}
-& X \times_Z Y \ar[d]^q \ar[r]_p
-& X \ar[d]_f
-& Y \ar[r]^g
-& Z
-\\
-\\
+  \ar@{.>}[dr]|-{(x,y)} \\
+  & X \times_Z Y \ar[d]^q \ar[r]_p & X \ar[d]_f  \\
+  & Y \ar[r]^g & Z
 
 A &*+[F]{\sum_{i=n}^m {i^2}} \\
 & {\bullet} & D \ar[ul]
@@ -38,8 +45,6 @@ A &*+[F]{\sum_{i=n}^m {i^2}} \\
 A \ar[d] \ar[r] & B \ar[d] \\
 B \ar[r]
 & C
-
-
 
 A \ar@<1ex>[dr]^a_{.} \\
 & B \ar@<1ex>[ul]^b \ar@<1ex>[r]^c
@@ -57,46 +62,12 @@ B & C \ar@<1ex>[ul]
 & {\circ} & {\circ} & {\circ} \\
 {\circ} & {\circ} & {\circ} & {\circ} 
 
-
-{\circ} \ar r[d]
-^a
-[rr]
-^b
-/4pt[rr] ^c
-[rrr]
-^d
-_dl[drrr]^e
-[drrr]^f
-& {\circ} & {\circ} & {\circ} \\
-{\circ} & {\circ} & {\circ} & {\circ} 
-
- A \ar @{=|>} [r] & B 
-
-
-A \ar@{-}[dr]
-&{}\save[]+<3cm,0cm>*\txt<8pc>{%
-This is a very big commentary
-but it does not otherwise affect
-the diagram.}
-\ar[l] \ar[d] \restore \\
-& B \ar@{-}[r] & C \ar@{-}[r] & D
-
-
-
 *\txt{A very long and stupid\\program}
 \ar[rr]^-{\txt{weird\\arrow}}
 &&*\txt<2pc>{Com\-pli\-cated\\Code}
 
  A \ar @{>->} @< 2pt> [r]
-\ar @{ >->} @<-2pt> [r] & B 
-
-
-\g1 A\ar[r]&B\ar[d]&\g2 A\ar[r]&B\ar[d]\\
-C\ar[u]&D\ar[l]&
-C\ar[u]&D\ar[l]
-\ar @{.>} "g1" ;"1,4"
-\ar @{-->} "2,1";"g2" 
-
+   \ar @{>->} @<-2pt> [r] & B\
 
 {\bullet} \ar@{--}[d]\ar@{=}[dr]\ar@{-}[r]
 & {\bullet} \ar@{.}[d] \\
