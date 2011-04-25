@@ -1,10 +1,8 @@
 package org.presheaf
 
 import java.io.{InputStream, FileInputStream}
-import annotation.tailrec
-import util.parsing.input.{Reader, StreamReader}
 
-object xydocscan {
+object XyDocScan {
   def bytes(is: InputStream) : Iterator[Byte] = new Iterator[Byte] {
     def hasNext = is.available > 0
     def next = is.read.toByte
@@ -14,8 +12,9 @@ object xydocscan {
 
   def chars(is: InputStream) = bytes(is) filter isText map (_.toChar)
 
+  import org.presheaf.DiagramSamples
+  
   def main(args: Array[String]) {
-
     val scanner = new XyScanner(chars(new FileInputStream(args(0))))
     for (diagram <- scanner) {
       if (!diagram.isEmpty) println(diagram + "\n")
