@@ -12,7 +12,7 @@ todo
 + make all the examples work
 + favico
 - make it run locally
-+- store session? cookie?, show last instances
+- store session? cookie?, show last instances
 - ajax?
 + try to find a micro ubuntu
 - draw categories
