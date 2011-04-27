@@ -40,9 +40,9 @@ class DiagramPage extends PresheafServlet {
   override def doGetXML(req:HttpServletRequest) = {
     configure(req.getSession.getServletContext)
     val format = notNull(req.getParameter("format"), "xy")
-    val param = notNull(req.getParameter("in"), "")
+    val param = req.getParameter("in")
 
-    if (param.isEmpty) {
+    if (param == null) {
       page("Let's try a diagram",
            sample,
            <p>enter something below</p>)

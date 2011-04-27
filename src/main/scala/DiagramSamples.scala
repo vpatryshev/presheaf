@@ -22,6 +22,12 @@ class DiagramSamples extends PresheafServlet {
    </html>
   }
 
+  def oneSample(xy: String) =
+    <tr>
+      <td>{ img("dws?out=png&in=" + DiagramRenderer.encode(xy)) }</td>
+      <td>{ xy }</td>
+    </tr>
+
   override def doGetXML(req:HttpServletRequest) = {
     configure(req.getSession.getServletContext)
     page("XY Diagram Samples")

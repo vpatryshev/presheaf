@@ -46,24 +46,24 @@ class DiagramRenderer(val cache: File) {
 
   def process(sourceDiagram: String, opt: String) : (String, File, File, Iterable[Node]) = {
     if (sourceDiagram == null) {
-      (null, null, null, List(Text("No diagram provided")))
+      throw new BadDiagram("No diagram provided")
     } else {
       val diagram = DiagramRenderer.decode(sourceDiagram)
       val name = nameFileFor(diagram)
       val file = new File(cache, name + ".tex")
       val img: File = withExtension(file, "png")
       val pdf: File = withExtension(file, "pdf")
+      if (img == null) throw new BadDiagram("latex error: no image")
       if (img.exists) (diagram, img, pdf, new ListBuffer[Node])
       else             doWithScript(diagram, name)
-
     }
   }
 
   def doWithScript(diagram: String, name: String) = {
     val file = new File(cache, name + ".tex")
-//    if (!file.exists) {
-//      throw new RuntimeException("Weird directory " + file.getParentFile.getAbsolutePath)/f
-//    }
+    if (!file.exists) {
+      throw new RuntimeException("Weird directory " + file.getParentFile.getAbsolutePath)
+    }
     val img: File = withExtension(file, "png")
     val pdf: File = withExtension(file, "pdf")
     val log = new ListBuffer[Node]
@@ -71,12 +71,11 @@ class DiagramRenderer(val cache: File) {
     pw.write(XYDiagram.buildTex(diagram).getBytes())
     pw.close
 
-    
     val command  = "/home/ubuntu/doxy.sh "  + name
+    // TODO: figure out wtf I transform an option to a tuple. it's wrong!
     runM("doxy.sh" -> command, log, DiagramRenderer.env)
     (diagram, img, pdf, log)
   }
-
 }
 
 object DiagramRenderer {
@@ -85,8 +84,6 @@ object DiagramRenderer {
 
   def homeDir = {
     def findIt(file: File) : Option[File] = {
-      println("findit(" + file + ")->")
-      println("->" + file.getAbsolutePath)
       file.getAbsolutePath match {
       case IsHome(owner) => Some(file)
       case _ => if (file.getAbsolutePath.contains("/")) findIt(file.getParentFile) else None

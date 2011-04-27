@@ -25,23 +25,27 @@ class DiagramService extends PresheafServlet {
   def json(map: Map[String, Object]) = map.map(attr _).mkString("{", ",", "}")
 
   override def doGet(req:HttpServletRequest, res:HttpServletResponse) : Unit = {
-    val (diagram, img, pdf, logs) : (String, File, File, Iterable[Node]) = process(req)
     res.setContentType("text/html")
-    req.getParameter("out") match {
-      case "png" => 
-        res.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY)
-        res.setHeader("Location", ref(img))
+    try {
+      val (diagram, img, pdf, logs) : (String, File, File, Iterable[Node]) = process(req)
+      req.getParameter("out") match {
+        case "png" =>
+          res.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY)
+          res.setHeader("Location", ref(img))
 
-      case "pdf" => 
-        res.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY)
-        res.setHeader("Location", ref(pdf))
-
-      case _ =>
-        res.getWriter.print(json(
-          Map("source"  -> diagram,
-              "image"   -> ref(img),
-              "pdf"     -> ref(pdf),
-              "logs"    -> (logs map (_.toString)),
-              "version" -> version)))}
+        case "pdf" =>
+          res.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY)
+          res.setHeader("Location", ref(pdf))
+        case _ =>
+          res.getWriter.print(json(
+            Map("source"  -> diagram,
+                "image"   -> ref(img),
+                "pdf"     -> ref(pdf),
+                "logs"    -> (logs map (_.toString)),
+                "version" -> version)))}
+    } catch {
+      case bd: BadDiagram => res.sendError(500, bd.getMessage)
+      case e: Throwable   => res.sendError(500, "Error while processing the diagram: " + e.getMessage)
+    }
   }
 }

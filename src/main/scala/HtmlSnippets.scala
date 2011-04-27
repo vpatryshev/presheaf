@@ -4,13 +4,8 @@ import scala.xml._
 import xml.UnprefixedAttribute
 
 object HtmlSnippets {
-  def img(src: String) = <img/> % new UnprefixedAttribute("src", src, Null)
-
-  def oneSample(xy: String) =
-    <tr>
-      <td>{ img("dws?out=png&in=" + DiagramRenderer.encode(xy)) }</td>
-      <td>{ xy }</td>
-    </tr>
+//  def img(src: String) = <img/> % new UnprefixedAttribute("src", src, Null)
+  def img(src: String) = <img src={src}/>
 
   def buildNo: String = {
     for (v <- Res.read("/buildno.txt").getLines()) {
