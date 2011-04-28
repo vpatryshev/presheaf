@@ -44,6 +44,16 @@ class DiagramRenderer(val cache: File) {
 
   def nameFileFor(tex: String) = "d" + DiagramRenderer.md5(tex)
 
+  def checkCache {
+    if (!cache.exists) throw new BadDiagram("System error, cache directory missing " + cache.getAbsolutePath)
+    if (!cache.isDirectory) throw new BadDiagram("System error, check cache directory " + cache.getAbsolutePath)
+  }
+
+  def diagramFile(name: String) = {
+    checkCache;
+    new File(cache, name + ".tex")
+  }
+
   def process(sourceDiagram: String, opt: String) : (String, File, File, Iterable[Node]) = {
     if (sourceDiagram == null) {
       throw new BadDiagram("No diagram provided")
@@ -53,23 +63,22 @@ class DiagramRenderer(val cache: File) {
       val file = new File(cache, name + ".tex")
       val img: File = withExtension(file, "png")
       val pdf: File = withExtension(file, "pdf")
-      if (img == null) throw new BadDiagram("latex error: no image")
       if (img.exists) (diagram, img, pdf, new ListBuffer[Node])
       else             doWithScript(diagram, name)
     }
   }
 
   def doWithScript(diagram: String, name: String) = {
-    val file = new File(cache, name + ".tex")
-    if (!file.exists) {
-      throw new RuntimeException("Weird directory " + file.getParentFile.getAbsolutePath)
-    }
+    val file = diagramFile(name)
     val img: File = withExtension(file, "png")
     val pdf: File = withExtension(file, "pdf")
     val log = new ListBuffer[Node]
     val pw = new FileOutputStream(file)
     pw.write(XYDiagram.buildTex(diagram).getBytes())
     pw.close
+
+    if (!file.exists) throw new BadDiagram("System error, diagram file missing after writing: " + file.getAbsolutePath)
+    if (!file.canRead) throw new BadDiagram("System error, can't read new file " + file.getAbsolutePath)
 
     val command  = "/home/ubuntu/doxy.sh "  + name
     // TODO: figure out wtf I transform an option to a tuple. it's wrong!
