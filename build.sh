@@ -1,5 +1,6 @@
 #!/bin/sh
 mkdir -p uploads
+mkdir -p archive
 VERFILE=src/main/resources/buildno.txt
 expr `cat $VERFILE` + 1 > $VERFILE
 VERSION=`cat $VERFILE`
@@ -11,6 +12,7 @@ WARNAME=presheaf.war
 WARFILE="build/$WARNAME"
 UP="$SCP uploads/* $SERVERHOME/download"
 GETLOGS="$SCP $SERVERHOME/tomcat/logs/* logs/"
+WEBAPPS="/var/lib/tomcat6/webapps"
 echo `date`> "uploads/ready.flag"
-ant war && cp $WARFILE archive/$WARNAME.$VERSION && cp $WARFILE uploads && $UP && cp $WARFILE /usr/share/tomcat/apache-tomcat-6.0.29/webapps/ && date && sleep 600 && $GETLOGS
+ant war && cp $WARFILE archive/$WARNAME.$VERSION && cp $WARFILE uploads && $UP && cp $WARFILE $WEBAPPS && date && sleep 600 && $GETLOGS
 
