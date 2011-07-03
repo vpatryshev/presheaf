@@ -9,11 +9,22 @@
     <mkdir dir="./build/presheaf/WEB-INF/lib"/>
     <mkdir dir="./build/presheaf/WEB-INF/classes"/>
     <!-- set properties: tomcat.home, scala.home -->
-    <property file="ant.properties"/>
+      <property environment="env"/>
+      <property file="ant.properties"/>
+
+      <path id="scalac.classpath">
+    <fileset dir="${env.SCALA_HOME}/lib">
+      <include name="*.jar"/>
+    </fileset>
+  </path>
+
+    <taskdef resource="scala/tools/ant/antlib.xml">
+    <classpath refid="scalac.classpath"/>
+  </taskdef>
+
     <taskdef name="scalac" classname="scala.tools.ant.Scalac"
       classpath="${scala-library.jar}:${scala-compiler.jar}"/>
   </target>
-
   <!-- build:    compile servlets -->
   <target name="build" depends="init">
     <!-- provide servlet-api.jar in classpath, enable xml parsing -->

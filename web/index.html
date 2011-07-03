@@ -1,15 +1,88 @@
 <html>
-  <head><title>Diagram Renderer</title></head>
-  <body>
-    <h1>Diagram Renderer</h1>
-    <p>
-      Check out <a href="http://www.tug.org/applications/Xy-pic/">http://www.tug.org/applications/Xy-pic/</a> regarding xypic.
-    </p>
-    <p>
-      <a href="http://ctan.org/tex-archive/macros/generic/diagrams/xypic/xy/doc/xyguide.pdf">This pdf</a> tells in details how to write diagrams in xypic format.
-    </p>
+      <head>
+        <title>Here's your diagram</title>
+      </head>
+      <body>
+        <script language="javascript">
+          function $(id) {
+            return document.getElementById(id)
+          }
+          function getInput() {
+            return encodeURIComponent($("d_in").value)
+          }
 
-    <p><a href="main">diagram renderer</a>
-    </p>
-  </body>
-</html>
+          function getFormat() {
+            var s = $("d_format")
+            return s.options[s.selectedIndex].value
+          }
+
+          function setState(state) {
+            $("d_status").innerHTML = state
+            document.title = state
+          }
+
+          function error(msg) {
+            setState("error")
+            $("d_error").innerHTML = msg
+          }
+
+          function send() {
+            var uri = "dws?format=" + getFormat() + "&in=" + getInput()
+            var xhr = new XMLHttpRequest()
+            $("d_results").style.display="none"
+            $("d_error").innerHTML = ""
+            setState("Please wait...")
+            xhr.onreadystatechange=function()
+            {
+               if (xhr.readyState==4) {
+                 if (xhr.status==200)
+                 {
+                   try {
+                     var response = eval("(" + xhr.responseText + ")")
+                     setState("Here's your diagram")
+                     $("d_png").src=response.image
+                     $("d_pdf").href=response.pdf
+                     $("d_txt").innerHTML=response.source
+                     $("d_version").innerHTML=response.version
+                     $("d_results").style.display="block"
+                   } catch (e) {
+                     error("oops, " + e)
+                   }
+                 } else {
+                   error("Got error " + xhr.status + " from the server.")
+                 }
+               }
+            }
+            xhr.open("GET", uri, true)
+            xhr.send()
+          }
+
+        </script>
+
+        <h1 id="d_status">Enter your diagram</h1>
+        <span id="d_error" style="color:red"></span>
+        <span id="d_results" style="display:none">
+        <p><b id="d_txt"></b></p>
+<p><img id="d_png"</img></p><p><a id="d_pdf">pdf</a></p><p></p>
+</span>
+       <form>
+         <select id="d_format" name="format">
+           <option value="xy">xypic</option>
+           <option value="graph">graph</option>
+           <option value="guess">ascii art</option>
+         </select>
+         <textarea cols="60" id="d_in" name="in" rows="10">X \ar@/_2pc/[rr]_{f;g} \ar[r]^f &amp;Y \ar[r]^g &amp;Z\</textarea>
+
+         <input type="button" value="Submit" onclick="send()"></input>
+       </form>
+        <p>
+          <a href="http://ctan.org/tex-archive/macros/generic/diagrams/xypic/xy/doc/xyguide.pdf">This pdf</a> tells in details how to write diagrams in xypic format.
+        </p>
+
+        <a href="samples">Samples</a><br></br>
+
+        <font size="-2"> <span id="d_version">h.z.</span> Copyright (c) Vlad Patryshev</font><br></br><i>Questions? <a href="mail:vpatryshev@gmail.com">ask me...</a></i>
+
+     </body>
+   </html>
+

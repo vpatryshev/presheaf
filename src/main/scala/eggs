@@ -1,0 +1,29 @@
+def linear(n: Int) = (n+1) / 2. //(n * (n + 1) - 2) / 2. / n
+
+def cached[K,V](f: K => V) : K => V = {
+       val cache = new scala.collection.mutable.HashMap[K,V]
+       k => cache.getOrElseUpdate(k, f(k))
+     }
+
+val best: Int => (Double, Int) = cached((n: Int) =>
+                          if (n < 4) (linear(n), 0) else
+                                          (for (k <- 2 to (n/2)) yield
+                                              (1 // for the first ball
+                                               + linear(k) * k / n
+                                               // average number of throws if
+                                               // the first ball breaks, with the probability of this, k/n
+                                               + best(n-k)._1 * (n-k) / n,
+                                               // avg number of throws if
+                                               // the first ball does not break, with the probability
+                                               k // this is the step at which we throw the first ball
+                                            )).min) // minimize using default pair comparator
+def bestSteps(height: Int): (Double, List[Int]) = {
+  val first = best(height)
+  (first._1, if (height < 4) Nil
+  else first._2 :: bestSteps(height - first._2)._2)
+}
+
+def forSequence(s: List[Int]) = ((0., 0) /: s.reverse) ((a,b) => { val c = a._2 + b; (a._1 * a._2 / c + 1 + linear(b) * b / c, c)})
+
+
+

@@ -19,9 +19,11 @@ abstract class PresheafServlet extends HttpServlet {
   def process(req:HttpServletRequest) : (String, File, File, Iterable[Node]) = {
     val diagram = req.getParameter("in")
 //    val context = req.getSession.getServletContext
-    val workDir = new File(req.getSession.getServletContext.getRealPath(".."), "cache")
-    System.out.println("processing \"" + diagram + "\", will store in " + workDir.getAbsolutePath)
-    workDir.mkdirs
+    val here = new File(req.getSession.getServletContext.getRealPath("x")).getParentFile
+    if (!here.exists) throw new BadDiagram("Server error, here directory missing " + here.getAbsolutePath)
+    val workDir = new File(here.getParentFile, "cache")
+    if (!workDir.exists) throw new BadDiagram("Server error, work directory missing " + workDir.getAbsolutePath)
+    if (!workDir.isDirectory) throw new BadDiagram("Server error, check work directory " + workDir.getAbsolutePath)
     val renderer = new DiagramRenderer(workDir)
     renderer.process(diagram, req.getParameter("opt"))
   }
@@ -32,5 +34,5 @@ abstract class PresheafServlet extends HttpServlet {
     out.print(doGetXML(req).toString)
   }
 
-  def doGetXML(req: HttpServletRequest) : Seq[Node] = error("oops")
+  def doGetXML(req: HttpServletRequest) : Seq[Node] = sys.error("oops")
 }

@@ -2,7 +2,7 @@ package org.presheaf
 
 import actors.Futures
 import actors.Futures._
-import java.io.{IOException, InputStream, BufferedOutputStream, File}
+import java.io.{InputStream, BufferedOutputStream, File}
 
 /**
  * OS - represents Operating System
@@ -17,9 +17,9 @@ object  OS {
   def dumper(stream: InputStream, buf: StringBuffer) =
     future(
       try {
-        for (line <- scala.io.Source.fromInputStream(stream).getLines) buf.append(line)
+        for (line <- scala.io.Source.fromInputStream(stream).getLines) { buf.append(line) }
       } catch {
-        case ioe: Any => buf.append('\n').append(ioe.getMessage).append(ioe)
+        case ioe: Any => { println("got an ioe"); println(ioe); buf.append('\n').append(ioe.getMessage).append(ioe)}
       }
     )
 
@@ -29,20 +29,20 @@ object  OS {
     val stdout = new StringBuffer
     val stderr = new StringBuffer
     val ctrlD = 4
-//    stdout.append(here.getAbsolutePath + "> " + command)
-    val process = java.lang.Runtime.getRuntime.exec(command, env, dir)
-    val processIn = new BufferedOutputStream(process.getOutputStream)
-    for (i <- 1 to 10) processIn.write(ctrlD)
-
-    Futures.awaitAll(timeout,
-      future { process.waitFor },
-      dumper(process.getInputStream, stdout),
-      dumper(process.getErrorStream, stderr)
-    )
-
-    process.destroy()
-
+    stdout.append(here.getAbsolutePath + "> " + command)
+    println("OS: Running " + command + ".")
     try {
+      val process = java.lang.Runtime.getRuntime.exec(command, env, dir)
+      val processIn = new BufferedOutputStream(process.getOutputStream)
+      for (i <- 1 to 10) processIn.write(ctrlD)
+
+      Futures.awaitAll(timeout,
+        future { process.waitFor },
+        dumper(process.getInputStream, stdout),
+        dumper(process.getErrorStream, stderr)
+      )
+
+      process.destroy()
       (Some(process.exitValue), stdout.toString, stderr.toString)
     } catch {
       case _ => (None, stdout.toString, stderr.toString)
@@ -80,4 +80,5 @@ object  OS {
     val envArray = envString.split("\n")
     Map(envArray.map(_.split("=")).filter(_.length == 2).map((a:Array[String]) => a(0) -> a(1)): _*)
   }
+
 }

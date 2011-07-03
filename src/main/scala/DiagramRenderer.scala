@@ -15,8 +15,9 @@ class DiagramRenderer(val cache: File) {
   def asXhtml(s: String): Array[Node] = s split "\\n" flatMap {x =>  List(Text(x), <br/>)}
 
   def log(action: (String, String), results: (Option[Int], String, String)): Seq[Node] = {
+ //   println("Now the log...")
     results._1 match {
-      case Some(0) => Text("")
+      case Some(0) => Text("ok")
         //<p>{ Text(action._1) } : OK    <code>{ action._2 }</code></p>
       case _       => {
         <p>{ Text(action._1) } = "{ Text(action._2) }"</p>
@@ -45,12 +46,12 @@ class DiagramRenderer(val cache: File) {
   def nameFileFor(tex: String) = "d" + DiagramRenderer.md5(tex)
 
   def checkCache {
-    if (!cache.exists) throw new BadDiagram("System error, cache directory missing " + cache.getAbsolutePath)
-    if (!cache.isDirectory) throw new BadDiagram("System error, check cache directory " + cache.getAbsolutePath)
+    if (!cache.exists) throw new BadDiagram("Serverm error, cache directory missing " + cache.getAbsolutePath)
+    if (!cache.isDirectory) throw new BadDiagram("Server error, check cache directory " + cache.getAbsolutePath)
   }
 
   def diagramFile(name: String) = {
-    checkCache;
+    checkCache
     new File(cache, name + ".tex")
   }
 
@@ -69,6 +70,7 @@ class DiagramRenderer(val cache: File) {
   }
 
   def doWithScript(diagram: String, name: String) = {
+//    println("DiagramRenderer running diagram with script: " + name)
     val file = diagramFile(name)
     val img: File = withExtension(file, "png")
     val pdf: File = withExtension(file, "pdf")
@@ -80,9 +82,10 @@ class DiagramRenderer(val cache: File) {
     if (!file.exists) throw new BadDiagram("System error, diagram file missing after writing: " + file.getAbsolutePath)
     if (!file.canRead) throw new BadDiagram("System error, can't read new file " + file.getAbsolutePath)
 
-    val command  = "/home/ubuntu/doxy.sh "  + name
+    val command  = "sh /root/doxy.sh "  + name
     // TODO: figure out wtf I transform an option to a tuple. it's wrong!
     runM("doxy.sh" -> command, log, DiagramRenderer.env)
+//    println("DiagramRenderer: seems to succeed, see the log: " + log)
     (diagram, img, pdf, log)
   }
 }
@@ -98,7 +101,7 @@ object DiagramRenderer {
       case _ => if (file.getAbsolutePath.contains("/")) findIt(file.getParentFile) else None
     }
     }
-    println("homeDir?" + new File(".").getAbsolutePath)
+//    println("homeDir?" + new File(".").getAbsolutePath)
     findIt(new File(new File(".").getAbsolutePath)).get.getAbsolutePath
   }
 
