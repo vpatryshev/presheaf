@@ -1,5 +1,6 @@
 # Generates images; pass file name without extension
-CACHE=/home/ubuntu/diagrams
+HOME=/root
+CACHE=$HOME/diagrams
 NAME=$1
 TEX=$NAME.tex
 EPS=$NAME.eps

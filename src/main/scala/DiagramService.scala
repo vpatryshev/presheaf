@@ -40,10 +40,10 @@ class DiagramService extends PresheafServlet {
         case _ =>
           res.getWriter.print(json(
             Map("source"  -> diagram,
-                "logs"    -> logs,
-                "image"   -> ref(img),
-                "pdf"     -> ref(pdf),
-                "version" -> version)
+                "logs"     -> logs.mkString("<br/>"),
+                "imageUrl" -> ref(img),
+                "pdfUrl"   -> ref(pdf),
+                "version"  -> version)
                 ))}
     } catch {
       case bd: BadDiagram => {
