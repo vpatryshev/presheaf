@@ -43,7 +43,7 @@ class DiagramRenderer(val cache: File) {
     for (x <- extensions) { withExtension(file, x).delete }
   }
 
-  def nameFileFor(tex: String) = "d" + DiagramRenderer.md5(tex)
+  def idFor(tex: String) = "d" + DiagramRenderer.md5(tex)
 
   def checkCache {
     if (!cache.exists) throw new BadDiagram("Serverm error, cache directory missing " + cache.getAbsolutePath)
@@ -55,17 +55,17 @@ class DiagramRenderer(val cache: File) {
     new File(cache, name + ".tex")
   }
 
-  def process(sourceDiagram: String, opt: String) : (String, File, File, Iterable[Node]) = {
+  def process(sourceDiagram: String, opt: String) : (String, String, File, File, Iterable[Node]) = {
     if (sourceDiagram == null) {
       throw new BadDiagram("No diagram provided")
     } else {
       val diagram = DiagramRenderer.decode(sourceDiagram)
-      val name = nameFileFor(diagram)
-      val file = new File(cache, name + ".tex")
-      val img: File = withExtension(file, "png")
-      val pdf: File = withExtension(file, "pdf")
-      if (img.exists) (diagram, img, pdf, new ListBuffer[Node])
-      else             doWithScript(diagram, name)
+      val id = idFor(diagram)
+      val file = new File(cache, id + ".tex")
+      val img: File = new File(cache, id + ".png")
+      val pdf: File = new File(cache, id + ".pdf")
+      if (img.exists) (id, diagram, img, pdf, new ListBuffer[Node])
+      else             doWithScript(diagram, id)
     }
   }
 
@@ -86,7 +86,7 @@ class DiagramRenderer(val cache: File) {
     // TODO: figure out wtf I transform an option to a tuple. it's wrong!
     runM("doxy.sh" -> command, log, DiagramRenderer.env)
 //    println("DiagramRenderer: seems to succeed, see the log: " + log)
-    (diagram, img, pdf, log)
+    (name, diagram, img, pdf, log)
   }
 }
 

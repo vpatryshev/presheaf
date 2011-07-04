@@ -52,7 +52,7 @@
                  if (xhr.status == 200) {
                    try {
                      var response = eval("(" + xhr.responseText + ")")
-                     diagram.image = image(response.imageUrl)
+                     response.image = image(response.imageUrl)
                      show(response)
                    } catch (e) {
                      error("oops, " + e)

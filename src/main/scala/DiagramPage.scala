@@ -47,12 +47,12 @@ class DiagramPage extends PresheafServlet {
            sample,
            <p>enter something below</p>)
     } else {
-      val (diagram, imgRef, pdfRef, logs) = process(req)
+      val (key, source, imgRef, pdfRef, logs) = process(req)
       val img = <img/> % fileAsAttr("src", imgRef)
       val pdf = <a>pdf</a> % fileAsAttr("href", pdfRef)
       page("Here's your diagram",
-           diagram,
-           <p>"<b>{ diagram }</b>"</p>
+           source,
+           <p>"<b>{ source }</b>"</p>
            <p>{ img }</p>
            <p>{ pdf }</p>
            <p>{ logs }</p>)

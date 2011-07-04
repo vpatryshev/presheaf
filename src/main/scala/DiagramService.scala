@@ -4,6 +4,7 @@ import org.presheaf.HtmlSnippets._
 import javax.servlet.http._
 import xml.Node
 import java.io.File
+import java.awt.RenderingHints.Key
 
 class DiagramService extends PresheafServlet {
 
@@ -27,7 +28,7 @@ class DiagramService extends PresheafServlet {
   override def doGet(req:HttpServletRequest, res:HttpServletResponse) : Unit = {
     res.setContentType("text/html")
     try {
-      val (diagram, img, pdf, logs) : (String, File, File, Iterable[Node]) = process(req)
+      val (key, source, img, pdf, logs) : (String, String, File, File, Iterable[Node]) = process(req)
       req.getParameter("out") match {
         case "png" =>
           res.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY)
@@ -39,7 +40,9 @@ class DiagramService extends PresheafServlet {
 
         case _ =>
           res.getWriter.print(json(
-            Map("source"  -> diagram,
+            Map(
+                "key"      -> key,
+                "source"   -> source,
                 "logs"     -> logs.mkString("<br/>"),
                 "imageUrl" -> ref(img),
                 "pdfUrl"   -> ref(pdf),

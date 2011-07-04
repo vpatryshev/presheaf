@@ -11,12 +11,11 @@ import collection.mutable.ListBuffer
 
 abstract class PresheafServlet extends HttpServlet {
   def notNull(value: String, default: String) = if (value == null) default else value
-
   def ref(file: File) = "cache/" + file.getName
 
   def fileAsAttr(attr: String, file: File) = new UnprefixedAttribute(attr, ref(file), Null)
 
-  def process(req:HttpServletRequest) : (String, File, File, Iterable[Node]) = {
+  def process(req:HttpServletRequest) : (String, String, File, File, Iterable[Node]) = {
     val diagram = req.getParameter("in")
 //    val context = req.getSession.getServletContext
     val here = new File(req.getSession.getServletContext.getRealPath("x")).getParentFile

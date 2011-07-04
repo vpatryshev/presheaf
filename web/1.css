@@ -1,0 +1,166 @@
+#fullBody {
+    width: 100%;
+    min-height: 100%;
+    position: relative;
+    margin: 0px;          
+}
+
+body {
+    margin: 0px;
+    font-family: Arial,Helvetica,sans-serif;
+}
+
+#titlebar {
+    background: #B6D0DE;
+    height: 64px;
+    position: relative;
+}
+
+#titlebar #menu {
+    position: absolute;
+    bottom: 10px;
+}
+
+#titlebar #menu a {
+    font-size: large;
+    text-decoration: none;
+    color: white;
+    background: #e68b2f; 
+    padding: 3px;
+}
+
+#titlebar a:hover {
+    background: #979797;
+}
+
+#main {
+    background: #CCC;
+    position: relative;
+}
+
+#textDiv {
+    position: absolute;
+    left: 100px;
+    height: 100%;
+}
+
+#textDiv textarea {
+    width: 350px;
+    background: rgb(255,255,225);
+    font-family: Lucida Console,Monospace,Courier New;            
+    font-size: 12px;
+    line-height: 13px;
+}
+
+#imageDiv {
+    position: absolute;
+    background: #CCC;
+    height: 100%;
+}
+
+div.image {
+    margin-top: 1em;
+    margin-bottom: 1em;
+    text-align: center;
+}
+
+div.image img {
+    cursor: pointer;
+}
+
+#history {
+    position: absolute;
+    width: 100px;          
+    background: white;
+    overflow: auto;
+}
+
+#errorDiv {
+    position: absolute;
+    height: 100px;
+    width: 350px;
+    overflow: auto;
+    color: #800;          
+    background: white;
+    border: 1px solid gray;
+    bottom: 0px;
+    font-family: Lucida Console,Monospace,Courier New;            
+    font-size: 12px;
+    line-height: 13px;
+}
+
+#errorDiv p {
+    margin: 0px;
+}
+
+#styleSelect {
+    position: fixed;
+    top: 70px;
+    right: 15px;
+    background: white;
+    opacity: 0.75;
+    z-index: 2;
+    border: 1px dashed orange;
+}
+
+.notice {
+    background: #f4a83d;
+    color: #735005;
+    border: 1px dashed white;
+    padding: 3px;
+    border: 2px solid #735005;
+}
+
+.centertext {
+    display: none;
+}
+
+.dialog {
+    display:none;
+    position: absolute;        
+}
+
+div.dialog {
+    position: absolute;
+    border: 2px dashed black;          
+    background: white;        
+    padding: 10px;
+    z-index: 2;
+    display: none;
+}
+
+div.dialog h1 {
+    color: orange;
+    font-family: Tahoma;       
+    margin-top: 0px;
+}
+
+div.dialog {
+    font-family: Tahoma;
+}
+
+div.dialog input {
+    font-size: large;
+}
+div.dialog td {
+    font-size: large;
+}
+
+div#filelist td {
+    font-family: Tahoma;
+    font-size: 13px;
+}
+
+.disabled {
+    color: gray;
+}
+
+.unlicensed {
+    display: none;
+}
+
+#arrows {
+    display: block;
+    position: fixed;
+    z-index: 2;
+}
