@@ -19,14 +19,14 @@ WEBAPPS="/var/lib/tomcat6/webapps"
 echo `date`> "uploads/ready.flag"
 ant war 
 cp $WARFILE archive/$WARNAME.$VERSION 
-echo "ok1" 
+#echo "ok1"
 cp $WARFILE $WEBAPPS/ROOT.war
-echo "ok2" 
+#echo "ok2"
 #sudo cp -r build/presheaf/WEB-INF $WEBAPPS/ROOT/
-echo "ok3" 
+#echo "ok3"
 #chmod a+r $WEBAPPS/ROOT.war
-cp $WARFILE uploads 
-echo "ok5: $UP" 
+cp $WARFILE uploads
+echo "got version `cat src/main/resources/buildno.txt`"
 echo "presheaf-06062011-256MlU04JcS1o"
 $UP 
 date 

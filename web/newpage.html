@@ -28,9 +28,21 @@
           $("d_error").innerHTML = msg
         }
 
-        function image(url) {
+        function texRef(id) {
+          return "cache/" + id + ".tex"
+        }
+
+        function pdfRef(id) {
+          return "cache/" + id + ".pdf"
+        }
+
+          function imgRef(id) {
+            return "cache/" + id + ".png"
+          }
+
+        function image(id) {
           var img = new Image()
-          img.src = url
+          img.src = imgRef(id)
           return img
         }
 
@@ -38,7 +50,7 @@
           return function(diagram) {
             setState("Here's your diagram")
             $("d_png").src=diagram.image.src
-            $("d_pdf").href=diagram.pdfUrl
+            $("d_pdf").href=pdfRef(diagram.id)
             $("d_txt").innerHTML=diagram.source
             $("d_version").innerHTML=diagram.version
             $("d_results").style.display="block"
@@ -56,7 +68,7 @@
                if (xhr.status == 200) {
                  try {
                    var response = eval("(" + xhr.responseText + ")")
-                   response.image = image(response.imageUrl)
+                   response.image = image(response.id)
                    response.image.onload = function() {
                      show(response)
                    }

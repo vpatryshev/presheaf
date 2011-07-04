@@ -61,11 +61,13 @@ class DiagramRenderer(val cache: File) {
     } else {
       val diagram = DiagramRenderer.decode(sourceDiagram)
       val id = idFor(diagram)
-      val file = new File(cache, id + ".tex")
       val img: File = new File(cache, id + ".png")
       val pdf: File = new File(cache, id + ".pdf")
+      val result =
       if (img.exists) (id, diagram, img, pdf, new ListBuffer[Node])
       else             doWithScript(diagram, id)
+      println("Renderer.process: " + result)
+      result
     }
   }
 
@@ -85,8 +87,9 @@ class DiagramRenderer(val cache: File) {
     val command  = "sh /root/doxy.sh "  + name
     // TODO: figure out wtf I transform an option to a tuple. it's wrong!
     runM("doxy.sh" -> command, log, DiagramRenderer.env)
-//    println("DiagramRenderer: seems to succeed, see the log: " + log)
-    (name, diagram, img, pdf, log)
+    val result = (name, diagram, img, pdf, log)
+//    println("DiagramRenderer: seems to succeed: " + result)
+    result
   }
 }
 

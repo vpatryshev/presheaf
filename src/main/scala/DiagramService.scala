@@ -28,7 +28,7 @@ class DiagramService extends PresheafServlet {
   override def doGet(req:HttpServletRequest, res:HttpServletResponse) : Unit = {
     res.setContentType("text/html")
     try {
-      val (key, source, img, pdf, logs) : (String, String, File, File, Iterable[Node]) = process(req)
+      val (id, source, img, pdf, logs) : (String, String, File, File, Iterable[Node]) = process(req)
       req.getParameter("out") match {
         case "png" =>
           res.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY)
@@ -41,9 +41,9 @@ class DiagramService extends PresheafServlet {
         case _ =>
           res.getWriter.print(json(
             Map(
-                "key"      -> key,
+                "id"      -> id,
                 "source"   -> source,
-                "logs"     -> logs.mkString("<br/>"),
+                "log"     -> logs.mkString("<br/>"),
                 "imageUrl" -> ref(img),
                 "pdfUrl"   -> ref(pdf),
                 "version"  -> version)
