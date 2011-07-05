@@ -39,7 +39,7 @@ class DiagramPage extends PresheafServlet {
 
   override def doGetXML(req:HttpServletRequest) = {
     configure(req.getSession.getServletContext)
-    val format = notNull(req.getParameter("format"), "xy")
+//    val format = notNull(req.getParameter("format"), "xy")
     val param = req.getParameter("in")
 
     if (param == null) {
@@ -47,7 +47,7 @@ class DiagramPage extends PresheafServlet {
            sample,
            <p>enter something below</p>)
     } else {
-      val (key, source, imgRef, pdfRef, logs) = process(req)
+      val (id, source, imgRef, pdfRef, logs) = process(req)
       val img = <img/> % fileAsAttr("src", imgRef)
       val pdf = <a>pdf</a> % fileAsAttr("href", pdfRef)
       page("Here's your diagram",

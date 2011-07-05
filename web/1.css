@@ -58,13 +58,13 @@ body {
     height: 100%;
 }
 
-div.image {
+div.historyEntry {
     margin-top: 1em;
     margin-bottom: 1em;
     text-align: center;
 }
 
-div.image img {
+div.historyEntry img {
     cursor: pointer;
 }
 
