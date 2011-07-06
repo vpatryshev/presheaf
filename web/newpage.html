@@ -17,16 +17,16 @@
           <span id="d_error" style="color:red"></span>
           <span id="d_results" style="display:none">
             <p><b id="d_txt"></b></p>
-            <p><img id="d_png"</img></p><p><a id="d_pdf">pdf</a></p><p></p>
+            <p><img id="d_png"</img>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="d_pdf">pdf</a></p><p></p>
           </span>
           <form>
-            <select id="d_format" name="format">
-              <option value="xy">xypic</option>
-              <option value="graph">graph</option>
-              <option value="guess">ascii art</option>
-            </select>
              <textarea cols="60" id="d_in" name="in" rows="10">X \ar@/_2pc/[rr]_{f;g} \ar[r]^f &amp;Y \ar[r]^g &amp;Z\</textarea>
-             <input type="button" value="Submit" onclick="commit()"></input>
+             <input type="button" value="Submit" onclick="commit()"></input><br/>
+              <select id="d_format" name="format">
+                <option value="xy">xypic</option>
+                <option value="graph">graph</option>
+                <option value="guess">ascii art</option>
+              </select>
            </form>
           <p>
             <a href="http://ctan.org/tex-archive/macros/generic/diagrams/xypic/xy/doc/xyguide.pdf">This pdf</a> tells in details how to write diagrams in xypic format.

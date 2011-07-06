@@ -46,7 +46,9 @@ function image(id) {
 var history = {}
 
 function choose(id) {
-  send(history[id].text, "xy")
+  var text = history[id].text
+  $("d_in").value = text
+  send(text, "xy")
 }
 
 function addToHistory(id, text, image) {
@@ -64,7 +66,7 @@ function show(diagram) {
   setState("Here's your diagram")
   $("d_png").src=diagram.image.src
   $("d_pdf").href=pdfRef(diagram.id)
-  $("d_txt").innerHTML=diagram.source
+//  $("d_txt").innerHTML=diagram.source
   $("d_version").innerHTML=diagram.version
   $("d_results").style.display="block"
   addToHistory(diagram.id, diagram.source, diagram.image)

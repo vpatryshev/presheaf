@@ -40,7 +40,7 @@ body {
 
 #textDiv {
     position: absolute;
-    left: 100px;
+    left: 139px;
     height: 100%;
 }
 
@@ -70,9 +70,9 @@ div.historyEntry img {
 
 #history {
     position: absolute;
-    width: 100px;          
-    background: white;
-    overflow: auto;
+    width: 131px;
+    background: #DCF2F2;
+    overflow: auto;2
 }
 
 #errorDiv {
