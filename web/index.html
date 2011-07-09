@@ -14,30 +14,41 @@
         <div id="history">
         </div>
         <div id="textDiv">
-          <span id="d_error" style="color:red"></span>
-          <span id="d_results" style="display:none">
-            <p><b id="d_txt"></b></p>
-            <p><img id="d_png"</img>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="d_pdf">pdf</a></p><p></p>
-          </span>
           <form>
-             <textarea cols="60" id="d_in" name="in" rows="10">X \ar@/_2pc/[rr]_{f;g} \ar[r]^f &amp;Y \ar[r]^g &amp;Z\</textarea>
-             <input type="button" value="Submit" onclick="commit()"></input><br/>
-              <select id="d_format" name="format">
-                <option value="xy">xypic</option>
-                <option value="graph">graph</option>
-                <option value="guess">ascii art</option>
-              </select>
-           </form>
-          <p>
-            <a href="http://ctan.org/tex-archive/macros/generic/diagrams/xypic/xy/doc/xyguide.pdf">This pdf</a> tells in details how to write diagrams in xypic format.
-          </p>
+            <table>
+                <tr>
+                    <td>
+                        <textarea cols="80" id="d_in" name="in" rows="5">X \ar@/_2pc/[rr]_{f;g} \ar[r]^f &amp;Y \ar[r]^g &amp;Z\</textarea>
+                    </td>
+                    <td>
+                        <select id="d_format" name="format">
+                          <option value="xy">xypic</option>
+                          <option value="graph">graph</option>
+                          <option value="guess">ascii art</option>
+                        </select><br>
+                        <input type="button" value="Submit" onclick="commit()"></input><br/>
+                    </td>
+                </tr>
+            </table>
+          </form>
+            <span id="d_error" style="color:red"></span>
+            <span id="d_results" style="display:none">
+              <p><b id="d_txt"></b></p>
+              <p><img id="d_png"</img>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="d_pdf">pdf</a></p><p></p>
+            </span>
 
-          <a href="samples">Samples</a><br></br>
+            Questions? <a href="mail:vpatryshev@gmail.com">ask me...</a> or read <a href="http://ctan.org/tex-archive/macros/generic/diagrams/xypic/xy/doc/xyguide.pdf">this</a>.<br/>
+            <a href="samples">Samples</a><br/>
+            <font size="-2">Ver. <span id="d_version">h.z.</span> Copyright (c) 2010-3010, Vlad Patryshev</font><br/>
 
-          <font size="-2"> <span id="d_version">h.z.</span> Copyright (c) Vlad Patryshev</font><br></br><i>Questions? <a href="mail:vpatryshev@gmail.com">ask me...</a></i>
         </div>
+
+        <div id="imageView"></div>
       </div>
     </div>
+    <script>
+        fillIn()
+    </script>
   </body>
 </html>
 

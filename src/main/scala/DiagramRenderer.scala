@@ -74,11 +74,15 @@ class DiagramRenderer(val cache: File) {
   def doWithScript(diagram: String, name: String) = {
 //    println("DiagramRenderer running diagram with script: " + name)
     val file = diagramFile(name)
+    val src: File = withExtension(file, "src")
+    val srcFile = new FileOutputStream(src)
+    srcFile.write(diagram.getBytes)
+    srcFile.close
     val img: File = withExtension(file, "png")
     val pdf: File = withExtension(file, "pdf")
     val log = new ListBuffer[Node]
     val pw = new FileOutputStream(file)
-    pw.write(XYDiagram.buildTex(diagram).getBytes())
+    pw.write(XYDiagram.buildTex(diagram).getBytes)
     pw.close
 
     if (!file.exists) throw new BadDiagram("System error, diagram file missing after writing: " + file.getAbsolutePath)
