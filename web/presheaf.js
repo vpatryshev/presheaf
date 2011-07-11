@@ -52,17 +52,29 @@ function justShow(id) {
 
 function choose(id) {
   getSrc(id)
+  addToHistory(id)
   justShow(id)
 }
 
-/** todo: get rid of that content, we need to sort */
-function addToHistory(id, image) {
-  history[id] = {image : image}
+function sortByValue(map) {
+  var a = []
+  for (key in map) {
+    if (map.hasOwnProperty(key))
+    a.push(key)
+  }
+
+  a.sort(function(x,y) {  return map[x] < map[y] })
+  return a
+}
+
+function addToHistory(id) {
+  history[id] = new Date().getTime()
   var s = ""
-  for (i in history) {
-    var entry = history[i]
-    var image = entry.image
-    s += "<div class=historyEntry><img src=\"" + image.src + "\" width=" + (image.width / 2) + " onclick=\"choose(\'" + i + "\')\"/>" + "</div>"
+  var sorted = sortByValue(history)
+  for (i = 0; i < sorted.length; i++) {
+    var id = sorted[i]
+    var img = image(id)
+    s += "<div class=historyEntry><img src=\"" + img.src + "\" width=" + (img.width * 2 / 3) + " onclick=\"choose(\'" + id + "\')\"/>" + "</div>"
   }
   $("history").innerHTML = s
 }
