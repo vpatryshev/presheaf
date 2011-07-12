@@ -43,7 +43,6 @@ function image(id) {
   return img
 }
 
-var history = {}
 
 function justShow(id) {
   $("d_png").src=imgRef(id)
@@ -67,14 +66,35 @@ function sortByValue(map) {
   return a
 }
 
+function getHistory() {
+  var cookie = document.cookie
+  if (!cookie) return {}
+  var matches = cookie.match(/(^|;)\s*History=([^;]+)/)
+  if (!matches) return {}
+  var ids = matches[2].split(",")
+  var history = {}
+  for (i = 0; i < ids.length; i++) {
+    history[ids[i]] = i
+  }
+  return history
+}
+
+var history = getHistory()
+
 function addToHistory(id) {
   history[id] = new Date().getTime()
+  showHistory()
+}
+
+function showHistory() {
   var s = ""
   var sorted = sortByValue(history)
+  document.cookie = 'History=' + sorted.join(",") + ';expires=July 19, 2051'
+
   for (i = 0; i < sorted.length; i++) {
     var id = sorted[i]
     var img = image(id)
-    s += "<div class=historyEntry><img src=\"" + img.src + "\" width=" + (img.width * 2 / 3) + " onclick=\"choose(\'" + id + "\')\"/>" + "</div>"
+    s += "<div class=historyEntry><img src=\"" + img.src + "\" width=" + Math.min(100, img.width) + " onclick=\"choose(\'" + id + "\')\"/>" + "</div>"
   }
   $("history").innerHTML = s
 }
@@ -146,3 +166,5 @@ function fillIn() {
   )
 
 }
+
+window.onload=showHistory
