@@ -62,7 +62,7 @@ function sortByValue(map) {
     a.push(key)
   }
 
-  a.sort(function(x,y) {  return map[x] < map[y] })
+  a.sort(function(x,y) { return map[x] < map[y] })
   return a
 }
 
@@ -86,9 +86,18 @@ function addToHistory(id) {
   showHistory()
 }
 
+var MAX_HISTORY_LENGTH = 42
+
 function showHistory() {
   var s = ""
   var sorted = sortByValue(history)
+  // now kick out the last one
+  if (sorted.length > MAX_HISTORY_LENGTH) {
+    for (i = MAX_HISTORY_LENGTH; i < sorted.length; i++) {
+      delete history[sorted[i]]
+    }
+    sorted = sorted.splice(MAX_HISTORY_LENGTH, sorted.length - MAX_HISTORY_LENGTH)
+  }
   document.cookie = 'History=' + sorted.join(",") + ';expires=July 19, 2051'
 
   for (i = 0; i < sorted.length; i++) {

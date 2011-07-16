@@ -23,9 +23,9 @@ while true; do
     cp $DOWNLOAD $ROOTAPP
     echo "now we have deployed $ROOTAPP ... "
     ls -l $ROOTAPP
-    /usr/share/tomcat6/bin/shutdown.sh
+    sudo service tomcat6 stop
     rm -rf $ROOTAPPDIR
-    /usr/share/tomcat6/bin/startup.sh
+    sudo service tomcat6 start
     sleep 60
     cd tomcat/webapps/ROOT
     ln -s catalina.out ../../logs/catalina.out
