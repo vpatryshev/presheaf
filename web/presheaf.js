@@ -23,6 +23,7 @@ function setState(state) {
 function error(msg) {
   setState("error")
   $("d_error").innerHTML = msg
+  hide()
 }
 
 function srcRef(id) {
@@ -43,10 +44,14 @@ function image(id) {
   return img
 }
 
+function hide() {
+  $("d_results").style.display="none"
+}
 
 function justShow(id) {
-  $("d_png").src=imgRef(id)
-  $("d_pdf").href=pdfRef(id)
+  $("d_png").src  = imgRef(id)
+  $("d_pdf").href = pdfRef(id)
+  $("d_results").style.display="block"
 }
 
 function choose(id) {
@@ -74,15 +79,17 @@ function getHistory() {
   var ids = matches[2].split(",")
   var history = {}
   for (i = 0; i < ids.length; i++) {
-    history[ids[i]] = i
+    if (ids[i] != 'length') {
+      history[ids[i]] = i
+    }
   }
   return history
 }
 
-var history = getHistory()
+var myHistory = getHistory()
 
 function addToHistory(id) {
-  history[id] = new Date().getTime()
+  myHistory[id] = new Date().getTime()
   showHistory()
 }
 
@@ -90,11 +97,11 @@ var MAX_HISTORY_LENGTH = 42
 
 function showHistory() {
   var s = ""
-  var sorted = sortByValue(history)
+  var sorted = sortByValue(myHistory)
   // now kick out the last one
   if (sorted.length > MAX_HISTORY_LENGTH) {
     for (i = MAX_HISTORY_LENGTH; i < sorted.length; i++) {
-      delete history[sorted[i]]
+      delete myHistory[sorted[i]]
     }
     sorted = sorted.splice(MAX_HISTORY_LENGTH, sorted.length - MAX_HISTORY_LENGTH)
   }
@@ -102,16 +109,42 @@ function showHistory() {
 
   for (i = 0; i < sorted.length; i++) {
     var id = sorted[i]
-    var img = image(id)
-    s += "<div class=historyEntry><img src=\"" + img.src + "\" width=" + Math.min(100, img.width) + " onclick=\"choose(\'" + id + "\')\"/>" + "</div>"
+    s += "<div class=historyEntry><img id=\"h." + id + "\"" +
+         "\" width=100 onclick=\"choose(\'" + id + "\')\"/>" + "</div>"
   }
   $("history").innerHTML = s
+
+  displayIcons(sorted);
+
+}
+
+function displayIcons(sorted) {
+  setTimeout(function() {
+    var images = [];
+
+    for (i = 0; i < sorted.length; i++) {
+      var id = sorted[i]
+      images[i] = image(id)
+      var key = "h." + id
+      images[i].onload = function() {
+        $(key).src = images[i].src
+        $(key).width = Math.min(100, images[i].width)
+      }
+    }
+
+    for (i = 0; i < sorted.length; i++) {
+      var id = sorted[i]
+      var img = images[i]
+      var key = "h." + id
+      $(key).src = img.src
+      $(key).width = Math.min(100, img.width)
+    }
+  }, 700)
 }
 
 function show(diagram) {
   setState("Here's your diagram")
   justShow(diagram.id)
-  $("d_results").style.display="block"
   addToHistory(diagram.id, diagram.image)
 }
 
@@ -149,12 +182,17 @@ function send(input, format) {
       },
       function(text) {
         var response = eval("(" + text + ")")
-        response.image = image(response.id)
-        response.image.onload = function() {
-          show(response)
+        if (response.error) {
+          error("Error: " + response.error)
+        } else {
+          response.image = image(response.id)
+          response.image.onload = function() {
+            show(response)
+          }
         }
       },
       function(msg) {
+//        alert("eh..." + msg)
         error(msg)
       }
   )

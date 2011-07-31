@@ -7,7 +7,8 @@ import java.io.File
 import java.awt.RenderingHints.Key
 
 class DiagramService extends PresheafServlet {
-
+  val xyError = ".*Xy-pic error:(.*)\\\\xyerror.*".r
+/*
   def page(diagram: String, imgRef: String, pdfRef: String, logs: Seq[Node]) = {
     <xml>
       <diagram>
@@ -19,7 +20,7 @@ class DiagramService extends PresheafServlet {
       </diagram>
     </xml>
   }
-
+*/
   val Q = "\""
   def quote(s: String) = Q + s.replaceAll(Q, "").replaceAll("\\\\", "\\\\\\\\") + Q
   def attr(nvp: (String,Object)) = nvp._1 + ":" + quote(nvp._2.toString)
@@ -40,14 +41,30 @@ class DiagramService extends PresheafServlet {
 
         case _ =>
           res.getWriter.print(json(
-            Map(
-                "id"      -> id,
-                "source"   -> source,
-                "log"     -> logs.mkString("<br/>"),
-                "imageUrl" -> ref(img),
-                "pdfUrl"   -> ref(pdf),
-                "version"  -> version)
-                ))}
+            if (logs.isEmpty) {
+              Map(
+                  "id"      -> id,
+                  "source"   -> source,
+                  "imageUrl" -> ref(img),
+                  "pdfUrl"   -> ref(pdf),
+                  "version"  -> version)
+            }
+            else {
+              val fullLog = logs.mkString("<br/>").replaceAll("\\\\", "\\\\").replaceAll("\"", "\\\"")
+              fullLog match {
+                case xyError(msg) =>
+                  Map(
+                      "error"     -> msg,
+                      "version"  -> version)
+                case _ =>
+                  Map(
+                      "error"     -> fullLog,
+                      "version"  -> version)
+
+              }
+            }
+          ))
+      }
     } catch {
       case bd: BadDiagram => {
         println("Diagram service: bad diagram, " + bd.getMessage)

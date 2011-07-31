@@ -17,7 +17,7 @@ class DiagramRenderer(val cache: File) {
   def log(action: (String, String), results: (Option[Int], String, String)): Seq[Node] = {
  //   println("Now the log...")
     results._1 match {
-      case Some(0) => Text("ok")
+      case Some(0) => Nil
         //<p>{ Text(action._1) } : OK    <code>{ action._2 }</code></p>
       case _       => {
         <p>{ Text(action._1) } = "{ Text(action._2) }"</p>
