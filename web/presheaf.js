@@ -54,7 +54,8 @@ function justShow(id) {
   $("d_results").style.display="block"
 }
 
-function choose(id) {
+function choose(imgsrc) {
+  var id = imgsrc.match("/([^\./]+)\.png")[1]
   getSrc(id)
   addToHistory(id)
   justShow(id)
@@ -68,8 +69,11 @@ function sortByValue(map) {
   }
 
   a.sort(function(x,y) { return map[x] < map[y] })
+
   return a
 }
+
+var MAX_HISTORY_LENGTH = 9
 
 function getHistory() {
   var cookie = document.cookie
@@ -80,7 +84,7 @@ function getHistory() {
   var history = {}
   for (i = 0; i < ids.length; i++) {
     if (ids[i] != 'length') {
-      history[ids[i]] = i
+      history[ids[i]] = MAX_HISTORY_LENGTH * 100 - i
     }
   }
   return history
@@ -93,10 +97,7 @@ function addToHistory(id) {
   showHistory()
 }
 
-var MAX_HISTORY_LENGTH = 42
-
 function showHistory() {
-  var s = ""
   var sorted = sortByValue(myHistory)
   // now kick out the last one
   if (sorted.length > MAX_HISTORY_LENGTH) {
@@ -106,46 +107,29 @@ function showHistory() {
     sorted = sorted.splice(MAX_HISTORY_LENGTH, sorted.length - MAX_HISTORY_LENGTH)
   }
   document.cookie = 'History=' + sorted.join(",") + ';expires=July 19, 2051'
-
-  for (i = 0; i < sorted.length; i++) {
-    var id = sorted[i]
-    s += "<div class=historyEntry><img id=\"h." + id + "\"" +
-         "\" width=100 onclick=\"choose(\'" + id + "\')\"/>" + "</div>"
-  }
-  $("history").innerHTML = s
-
-  displayIcons(sorted);
-
+  fillImages(sorted)
 }
 
-function displayIcons(sorted) {
-  setTimeout(function() {
-    var images = [];
 
-    for (i = 0; i < sorted.length; i++) {
-      var id = sorted[i]
-      images[i] = image(id)
-      var key = "h." + id
-      images[i].onload = function() {
-        $(key).src = images[i].src
-        $(key).width = Math.min(100, images[i].width)
-      }
-    }
+function fillImages(ids) {
+  var loadedImages = []
 
-    for (i = 0; i < sorted.length; i++) {
-      var id = sorted[i]
-      var img = images[i]
-      var key = "h." + id
-      $(key).src = img.src
-      $(key).width = Math.min(100, img.width)
+  for (i = 0; i < ids.length; i++) {
+    var id = ids[i]
+    loadedImages[i] = image(id)
+    loadedImages[i].id = "h." + i
+    loadedImages[i].onload = function() {
+      var key = this.id
+      $(key).src = this.src
+      $(key).width = Math.min(100, this.width)
     }
-  }, 700)
+  }
 }
 
 function show(diagram) {
   setState("Here's your diagram")
   justShow(diagram.id)
-  addToHistory(diagram.id, diagram.image)
+  addToHistory(diagram.id)
 }
 
 function xhr(uri, onwait, onload, onerror) {
@@ -178,6 +162,7 @@ function getSrc(id) {
 function send(input, format) {
   xhr("dws?format=" + format + "&in=" + encodeURIComponent(input),
       function() {
+        setState("please wait...")
         $("d_error").innerHTML = ""
       },
       function(text) {
@@ -211,7 +196,13 @@ function fillIn() {
         error(msg)
       }
   )
-
 }
 
-window.onload=showHistory
+window.onload=function() {
+  var historyHtml = ""
+  for (var i = 0; i < MAX_HISTORY_LENGTH; i++) {
+    historyHtml += "<div class=historyEntry><img id=\"h." + i + "\" width=100 onclick=\"choose(this.src)\"/>" + "</div>"
+  }
+  $("history").innerHTML = historyHtml
+  showHistory()
+}
