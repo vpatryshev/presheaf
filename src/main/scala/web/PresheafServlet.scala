@@ -17,6 +17,7 @@ abstract class PresheafServlet extends HttpServlet {
 
   def process(req:HttpServletRequest) : (String, String, File, File, Iterable[Node]) = {
     val diagram = req.getParameter("in")
+    println("Rendering diagram \"" + diagram + "\"")
 //    val context = req.getSession.getServletContext
     val here = new File(req.getSession.getServletContext.getRealPath("x")).getParentFile
     if (!here.exists) throw new BadDiagram("Server error, here directory missing " + here.getAbsolutePath)

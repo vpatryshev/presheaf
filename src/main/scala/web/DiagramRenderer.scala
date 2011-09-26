@@ -56,16 +56,18 @@ class DiagramRenderer(val cache: File) {
   }
 
   def process(sourceDiagram: String, opt: String) : (String, String, File, File, Iterable[Node]) = {
+
     if (sourceDiagram == null) {
       throw new BadDiagram("No diagram provided")
     } else {
       val diagram = DiagramRenderer.decode(sourceDiagram)
+      println("decoded '" + sourceDiagram + "' to '" + diagram + "'")
       val id = idFor(diagram)
       val img: File = new File(cache, id + ".png")
       val pdf: File = new File(cache, id + ".pdf")
       val result =
-      if (img.exists) (id, diagram, img, pdf, new ListBuffer[Node])
-      else             doWithScript(diagram, id)
+          if (img.exists) (id, diagram, img, pdf, new ListBuffer[Node])
+          else             doWithScript(diagram, id)
       println("Renderer.process: " + result)
       result
     }
@@ -148,7 +150,7 @@ object DiagramRenderer {
     xy.replaceAll("\\(\\(", "/")
       .replaceAll("\\)\\)", "/")
       .replaceAll("\\(\\)", "@")
-      .replaceAll(".,", ";")
+      .replaceAll("\\.,", ";")
       .replaceAll("__", "&")
       .replaceAll("\n", " ")
   }
