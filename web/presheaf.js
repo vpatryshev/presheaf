@@ -122,6 +122,7 @@ function fillImages(ids) {
       var key = this.id
       $(key).src = this.src
       $(key).width = Math.min(100, this.width)
+      $(key).style.visibility='visible'
     }
   }
 }
@@ -186,6 +187,7 @@ function send(input, format) {
 function commit() {
   send(getInput(), getFormat())
 }
+
 function fillIn() {
   xhr("dws?format=xy&in=X",
       function() {},
@@ -201,7 +203,7 @@ function fillIn() {
 window.onload=function() {
   var historyHtml = ""
   for (var i = 0; i < MAX_HISTORY_LENGTH; i++) {
-    historyHtml += "<div class=historyEntry><img id=\"h." + i + "\" width=100 onclick=\"choose(this.src)\"/>" + "</div>"
+    historyHtml += "<div class=historyEntry><img id=\"h." + i + "\" width=100 style='visibility:hidden'' onclick=\"choose(this.src)\"/>" + "</div>"
   }
   $("history").innerHTML = historyHtml
   showHistory()

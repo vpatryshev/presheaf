@@ -11,6 +11,7 @@ body {
 }
 
 #titlebar {
+    font-family: 'Nunito', sans-serif;
     background: #B6D0DE;
     height: 64px;
     position: relative;
