@@ -13,7 +13,7 @@ class DiagramSamples extends PresheafServlet {
       </head>
       <body>
         <h1>{ title }</h1>
-        <p>{ samples }</p>
+        <p>{ samplesHtml }</p>
         <p>
           <a href="http://ctan.org/tex-archive/macros/generic/diagrams/xypic/xy/doc/xyguide.pdf">This pdf</a> tells in details how to write diagrams in xypic format.
         </p>
@@ -24,7 +24,7 @@ class DiagramSamples extends PresheafServlet {
 
   def oneSample(xy: String) =
     <tr>
-      <td>{ img("dws?out=png&in=" + DiagramRenderer.encode(xy)) }</td>
+      <td>{ img("dws?op=aspng&format=xy&in=" + DiagramRenderer.encode(xy)) }</td>
       <td>{ xy }</td>
     </tr>
 
@@ -33,21 +33,21 @@ class DiagramSamples extends PresheafServlet {
     page("XY Diagram Samples")
   }
 
-    def samples() = {
+    def samplesHtml = {
 
     <table border="1">
       <tr>
         <th>diagram</th>
         <th>xypic source</th>
       </tr>
-      { DiagramSamples.snippets map oneSample }
+      { DiagramSamples.samples map oneSample }
      </table>
     }
  }
 
 object DiagramSamples {
 
-  def snippets = {
+  def samples = {
     ((List[String](),"") /: Res.read("/samples.txt").getLines()) (
       (accumulator: (List[String], String), line) => line match {
         case ""   => accumulator._2 match {

@@ -16,16 +16,25 @@ abstract class PresheafServlet extends HttpServlet {
   def fileAsAttr(attr: String, file: File) = new UnprefixedAttribute(attr, ref(file), Null)
 
   def process(req:HttpServletRequest) : (String, String, File, File, Iterable[Node]) = {
-    val diagram = req.getParameter("in")
+    process(req, req.getParameter("in"), req.getParameter("opt"))
+  }
+
+  def process(req:HttpServletRequest, diagram: String, opt: String) : (String, String, File, File, Iterable[Node]) = {
+    if (diagram == null || diagram.isEmpty) throw new BadDiagram("no diagram to render")
     println("Rendering diagram \"" + diagram + "\"")
 //    val context = req.getSession.getServletContext
+    renderer(req:HttpServletRequest).process(diagram, opt)
+  }
+
+  def renderer(req:HttpServletRequest) = new DiagramRenderer(wd(req:HttpServletRequest))
+
+  def wd(req:HttpServletRequest) = {
     val here = new File(req.getSession.getServletContext.getRealPath("x")).getParentFile
     if (!here.exists) throw new BadDiagram("Server error, here directory missing " + here.getAbsolutePath)
     val workDir = new File(here.getParentFile, "cache")
     if (!workDir.exists) throw new BadDiagram("Server error, work directory missing " + workDir.getAbsolutePath)
     if (!workDir.isDirectory) throw new BadDiagram("Server error, check work directory " + workDir.getAbsolutePath)
-    val renderer = new DiagramRenderer(workDir)
-    renderer.process(diagram, req.getParameter("opt"))
+    workDir
   }
 
   override def doGet(req : HttpServletRequest, res : HttpServletResponse) : Unit = {

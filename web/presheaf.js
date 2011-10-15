@@ -51,12 +51,12 @@ function hide() {
 function justShow(id) {
   $("d_png").src  = imgRef(id)
   $("d_pdf").href = pdfRef(id)
+  getSrc(id)
   $("d_results").style.display="block"
 }
 
 function choose(imgsrc) {
   var id = imgsrc.match("/([^\./]+)\.png")[1]
-  getSrc(id)
   addToHistory(id)
   justShow(id)
 }
@@ -188,6 +188,27 @@ function commit() {
   send(getInput(), getFormat())
 }
 
+function fillSamples(sources) {
+  var loadedImages = []
+  for (i = 0; i < sources.length; i++) {
+    var id = sources[i].id
+    $("samples" + i % 2).innerHTML += "<div class='diagramEntry' id='s.i." + id + "'/>"
+    loadedImages[i] = image(id)
+    loadedImages[i].id = "i." + id
+    setListeners(loadedImages[i], id)
+  }
+}
+
+// separate function so the context does not leak into the closures
+function setListeners(image, id) {
+  image.onclick = Function('justShow("' + id + '")')
+  image.onload = function() {
+    this.width = Math.min(100, this.width)
+    $('s.' + this.id).appendChild(this)
+  }
+}
+
+
 function fillIn() {
   xhr("dws?format=xy&in=X",
       function() {},
@@ -198,12 +219,28 @@ function fillIn() {
         error(msg)
       }
   )
+  xhr("dws?op=samples",
+      function() {},
+      function(text) {
+        try {
+          fillSamples(eval("(" + text + ")"))
+        } catch(e) {
+          error(e)
+        }
+      },
+      function(msg) {
+        error(msg)
+      }
+  )
 }
 
-window.onload=function() {
+window.onload = function() {
+  fillIn()
   var historyHtml = ""
   for (var i = 0; i < MAX_HISTORY_LENGTH; i++) {
-    historyHtml += "<div class=historyEntry><img id=\"h." + i + "\" width=100 style='visibility:hidden'' onclick=\"choose(this.src)\"/>" + "</div>"
+    historyHtml += "<div class=diagramEntry>"
+                 + "<img id=\"h." + i + "\" width=100 style='visibility:hidden' "
+                 + "onclick='choose(this.src)'/>" + "</div>"
   }
   $("history").innerHTML = historyHtml
   showHistory()

@@ -4,66 +4,68 @@ import org.presheaf.HtmlSnippets._
 import javax.servlet.http._
 import xml.Node
 import java.io.File
-import java.awt.RenderingHints.Key
 
 class DiagramService extends PresheafServlet {
   val xyError = ".*Xy-pic error:(.*)\\\\xyerror.*".r
-/*
-  def page(diagram: String, imgRef: String, pdfRef: String, logs: Seq[Node]) = {
-    <xml>
-      <diagram>
-        <source>{  diagram }</source>
-        <image>{   imgRef  }</image>
-        <pdf>{     pdfRef  }</pdf>
-        <logs>{    logs    }</logs>
-        <version>{ version }</version>
-      </diagram>
-    </xml>
-  }
-*/
+
   val Q = "\""
   def quote(s: String) = Q + s.replaceAll(Q, "").replaceAll("\\\\", "\\\\\\\\") + Q
-  def attr(nvp: (String,Object)) = nvp._1 + ":" + quote(nvp._2.toString)
-  def json(map: Map[String, Object]) = map.map(attr _).mkString("{", ",", "}")
+  def json(s: String): String = quote(s)
+  def json(nvp: (String,_)): String = json(nvp._1) + ":" + json(nvp._2.toString)
+  def json(map: Map[String, _]): String = map.map(json(_)).mkString("{", ",", "}")
+  def json(seq: Iterator[String]): String = seq.map(json).mkString("[", ",\n", "]")
+//  def json(seq: Iterator[Map[String, _]]): String = seq.map(json).mkString("[", ",\n", "]")
+  def json(seq: Iterable[String]): String = json(seq.iterator)
+
+  def errorLog(logs: Iterable[Node]) = {
+    val fullLog = logs.mkString("<br/>").replaceAll("\\\\", "\\\\").replaceAll("\"", "\\\"")
+    fullLog match {
+      case xyError(msg) =>
+        Map(
+            "error"     -> msg,
+            "version"  -> version)
+      case _ =>
+        Map(
+            "error"     -> fullLog,
+            "version"  -> version)
+
+    }
+  }
+
+  def produce(req:HttpServletRequest, diagram:String): String = {
+    //return Map("error" -> "Sorry, this is broken now, working on it - Vlad, 1:05pm (PDT), 10/14/2011")
+    val (id, source, img, pdf, logs) : (String, String, File, File, Iterable[Node]) = process(req, diagram, req.getParameter("opt"))
+    json(
+      if (logs.isEmpty) {
+        Map(
+          "id"      -> id,
+          "source"   -> quote(source),
+          "version"  -> version)
+      }
+      else {
+        errorLog(logs)
+      }
+    )
+  }
 
   override def doGet(req:HttpServletRequest, res:HttpServletResponse) : Unit = {
     res.setContentType("text/html")
     try {
-      val (id, source, img, pdf, logs) : (String, String, File, File, Iterable[Node]) = process(req)
-      req.getParameter("out") match {
-        case "png" =>
-          res.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY)
-          res.setHeader("Location", ref(img))
 
-        case "pdf" =>
+      req.getParameter("op") match {
+        case "samples" => res.getWriter.print(DiagramSamples.samples.map(produce(req, _)).mkString("[", ",\n", "]"))
+
+        case "aspng" =>
           res.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY)
-          res.setHeader("Location", ref(pdf))
+          res.setHeader("Location", ref(process(req)._3))
+
+        case "aspdf" =>
+          res.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY)
+          res.setHeader("Location", ref(process(req)._4))
 
         case _ =>
-          res.getWriter.print(json(
-            if (logs.isEmpty) {
-              Map(
-                  "id"      -> id,
-                  "source"   -> source,
-                  "imageUrl" -> ref(img),
-                  "pdfUrl"   -> ref(pdf),
-                  "version"  -> version)
-            }
-            else {
-              val fullLog = logs.mkString("<br/>").replaceAll("\\\\", "\\\\").replaceAll("\"", "\\\"")
-              fullLog match {
-                case xyError(msg) =>
-                  Map(
-                      "error"     -> msg,
-                      "version"  -> version)
-                case _ =>
-                  Map(
-                      "error"     -> fullLog,
-                      "version"  -> version)
-
-              }
-            }
-          ))
+         val result = produce(req, req.getParameter("in"))
+         res.getWriter.print(result)
       }
     } catch {
       case bd: BadDiagram => {
@@ -72,34 +74,10 @@ class DiagramService extends PresheafServlet {
       }
       case e: Throwable   => {
         println("Diagram service: an exception")
-        println(e)
         e.printStackTrace
         res.getWriter.print(json(Map("error" -> e.getMessage)))
-        e.printStackTrace(); res.sendError(500, "Error while processing the diagram: " + e.getMessage)
+        res.sendError(500, "Error while processing the diagram: " + e.getMessage)
       }
     }
   }
-/*
-def cached[K,V](f: K => V) : K => V = {
-       val cache = new scala.collection.mutable.HashMap[K,V]
-       k => cache.getOrElseUpdate(k, f(k))
-     }
-
-def linear(n: Int) = ((n + 1) / 2.
-
-val best: Int => (Double, Int) = cached((n: Int) =>
-                          if (n < 4) (linear(n), 0) else
-                                          (for (k <- 2 to (n/2)) yield
-                                              (1 + linear(k) * k / n + best(n-k)._1 * (n-k) / n, k)).min)
-
-val theirs = List(14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 1)
-
-def forSequence(s: List[Int]) = ((0., 0) /: s.reverse) ((a,b) => { val c = a._2 + b; (a._1 * a._2 / c + 1 + linear(b) * b / c, c)})
-
-def bestSteps(height: Int): (Double, List[Int]) = {
-  val first = best(height)
-  (first._1, if (height < 4) Nil
-             else first._2 :: bestSteps(height - first._2)._2)
-}
-*/
 }

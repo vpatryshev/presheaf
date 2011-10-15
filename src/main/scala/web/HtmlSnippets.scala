@@ -4,7 +4,6 @@ import scala.xml._
 import xml.UnprefixedAttribute
 
 object HtmlSnippets {
-//  def img(src: String) = <img/> % new UnprefixedAttribute("src", src, Null)
   def img(src: String) = <img src={src}/>
 
   def buildNo: String = {
