@@ -10,8 +10,8 @@ import java.io.{InputStream, BufferedOutputStream, File}
 
 object  OS {
 
-  def log(s: String) {
-    println("" + new java.util.Date + ": " + s)
+  def log(thing: Any) {
+    println("" + new java.util.Date + "] " + thing)
   }
   
   def dumper(stream: InputStream, buf: StringBuffer) =
@@ -19,7 +19,7 @@ object  OS {
       try {
         for (line <- scala.io.Source.fromInputStream(stream).getLines) { buf.append(line) }
       } catch {
-        case ioe: Any => { println("got an ioe"); println(ioe); buf.append('\n').append(ioe.getMessage).append(ioe)}
+        case ioe: Any => { log("got an ioe"); log(ioe); buf.append('\n').append(ioe.getMessage).append(ioe)}
       }
     )
 
@@ -30,7 +30,7 @@ object  OS {
     val stderr = new StringBuffer
     val ctrlD = 4
     stdout.append(here.getAbsolutePath + "> " + command)
-    println("OS: Running " + command + ".")
+    log("OS: Running " + command + ".")
     try {
       val process = java.lang.Runtime.getRuntime.exec(command, env, dir)
       val processIn = new BufferedOutputStream(process.getOutputStream)

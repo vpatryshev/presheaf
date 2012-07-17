@@ -11,12 +11,22 @@ todo
 * include all examples from xydoc
 + make all the examples work
 + favico
-- make it run locally
-- store session? cookie?, show last instances
-- ajax?
+? make it run locally
+* http://www.websequencediagrams.com/
++ store session? cookie?, show last instances
++ ajax
 + try to find a micro ubuntu
+  bugs:
+   - ))->\
+   - history redrawn much later, how come?
 - draw categories
 - tikz
-- http://www.websequencediagrams.com/
 - http://mathurl.com/
+- http://www.codecogs.com/latex/eqneditor.php
+
+** separate title and status
+** a matrix with samples
+- use rsync?
+- box.net api key is n2p8dgkm3s9qdv9xl4vtrt1ils8yix93 (app is presheaf)
+
 

@@ -34,6 +34,10 @@ function pdfRef(id) {
   return "cache/" + id + ".pdf"
 }
 
+function permanentRef(id) {
+
+}
+
 function imgRef(id) {
   return "cache/" + id + ".png"
 }
@@ -48,9 +52,15 @@ function hide() {
   $("d_results").style.display="none"
 }
 
+function quoteRef(id) {
+  return '<a href="' + getUrl() + '?d=' + id + '"><img src="http://presheaf.com/' + imgRef(id) +
+         '" title="click to go to presheaf.com for editing"/></a>'
+}
+
 function justShow(id) {
   $("d_png").src  = imgRef(id)
   $("d_pdf").href = pdfRef(id)
+  $("d_quote").value = quoteRef(id)
   getSrc(id)
   $("d_results").style.display="block"
 }
@@ -195,6 +205,7 @@ function fillSamples(sources) {
     $("samples" + i % 2).innerHTML += "<div class='diagramEntry' id='s.i." + id + "'/>"
     loadedImages[i] = image(id)
     loadedImages[i].id = "i." + id
+    loadedImages[i].alt = sources[i].source
     setListeners(loadedImages[i], id)
   }
 }
@@ -234,6 +245,14 @@ function fillIn() {
   )
 }
 
+function getUrl() {
+  if (x = new RegExp('([^?]+)').exec(location.href)) return x[1]
+}
+
+function getArg(name) {
+  if (name = (new RegExp('[?&]' + name + '=([^&]+)')).exec(location.search)) return name[1]
+}
+
 window.onload = function() {
   fillIn()
   var historyHtml = ""
@@ -244,4 +263,6 @@ window.onload = function() {
   }
   $("history").innerHTML = historyHtml
   showHistory()
+  var id = getArg('d')
+  if (id) justShow(id)
 }

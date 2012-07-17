@@ -14,8 +14,7 @@ class DiagramRenderer(val cache: File) {
 
   def asXhtml(s: String): Array[Node] = s split "\\n" flatMap {x =>  List(Text(x), <br/>)}
 
-  def log(action: (String, String), results: (Option[Int], String, String)): Seq[Node] = {
- //   println("Now the log...")
+  def toHtml(action: (String, String), results: (Option[Int], String, String)): Seq[Node] = {
     results._1 match {
       case Some(0) => Nil
         //<p>{ Text(action._1) } : OK    <code>{ action._2 }</code></p>
@@ -30,7 +29,7 @@ class DiagramRenderer(val cache: File) {
 
   def runM(action: (String, String), logs: ListBuffer[Node], env: Map[String, String]): Option[Int] = {
     val results = OS.run(action._2, 4000, new File("."), env)
-    logs ++= log(action, results)
+    logs ++= toHtml(action, results)
     results._1
   }
 
@@ -61,14 +60,14 @@ class DiagramRenderer(val cache: File) {
       throw new BadDiagram("No diagram provided")
     } else {
       val diagram = DiagramRenderer.decode(sourceDiagram)
-      println("decoded '" + sourceDiagram + "' to '" + diagram + "'")
+      OS.log("decoded '" + sourceDiagram + "' to '" + diagram + "'")
       val id = idFor(diagram)
       val img: File = new File(cache, id + ".png")
       val pdf: File = new File(cache, id + ".pdf")
       val result =
           if (img.exists) (id, diagram, img, pdf, new ListBuffer[Node])
           else             doWithScript(diagram, id)
-      println("Renderer.process: " + result)
+      OS.log("Renderer.process: " + result)
       result
     }
   }
@@ -122,37 +121,14 @@ object DiagramRenderer {
     )
 
   def configure(context: ServletContext) = {
-    println("Currently in " + new File(".").getAbsolutePath)
+    OS.log("Currently in " + new File(".").getAbsolutePath)
   }
 
-  def encode(xy: String) = {
-    val buf = new StringBuilder
-    var withinSlash = false
-    var withinCurly = false
-    for (c <- xy; if (c >= ' '  )) {
-      withinCurly |= c == '{'
-      withinCurly &= c != '}'
-      if (withinCurly) {
-        if (c == ';') buf.append(".,") else buf.append(c)
-      } else if (c == '/') {
-        withinSlash = !withinSlash
-        buf.append(if (withinSlash) "((" else "))")
-      } else {
-        buf.append(if (c == '&') "__" else if (c == '@') "()" else c)
-      }
-    }
-
-    buf.toString
-  }
+  def encode(xy: String) = xy
 
   def decode(xy: String) = {
     if (xy == null) null else
-    xy.replaceAll("\\(\\(", "/")
-      .replaceAll("\\)\\)", "/")
-      .replaceAll("\\(\\)", "@")
-      .replaceAll("\\.,", ";")
-      .replaceAll("__", "&")
-      .replaceAll("\n", " ")
+    xy.replaceAll("\n", " ")
   }
 
   import java.security._

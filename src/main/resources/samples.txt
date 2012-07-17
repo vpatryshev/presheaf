@@ -100,7 +100,6 @@ A \ar[d]_f \ar[r]^f
 & B \ar[dl]|{i_B} \ar[d]^g \\
 B \ar[r]_g & C 
 
-
 *=0{\bullet}
 \ar@/^/[dr]!U|1
 \ar@/^/[drr]!U|2
@@ -110,9 +109,9 @@ B \ar[r]_g & C
 &*+[F]\txt{x\\x}
 &*+[F]\txt{x\\x\\x}
 
-
-
 A \ar[r] ^a="a" & B \ar[r] ^b="b" & C
 \ar @/^/ "a";"b" 
 
+Dialectica \\
+U \ar@{>}|-*@{|}[r] &X\\
 

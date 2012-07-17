@@ -17,7 +17,7 @@ object XyDocScan {
   def main(args: Array[String]) {
     val scanner = new XyScanner(chars(new FileInputStream(args(0))))
     for (diagram <- scanner) {
-      if (!diagram.isEmpty) println(diagram + "\n")
+      if (!diagram.isEmpty) OS.log(diagram + "\n")
     }
   }
 

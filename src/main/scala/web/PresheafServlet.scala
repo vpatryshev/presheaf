@@ -21,7 +21,7 @@ abstract class PresheafServlet extends HttpServlet {
 
   def process(req:HttpServletRequest, diagram: String, opt: String) : (String, String, File, File, Iterable[Node]) = {
     if (diagram == null || diagram.isEmpty) throw new BadDiagram("no diagram to render")
-    println("Rendering diagram \"" + diagram + "\"")
+    OS.log("Rendering diagram \"" + diagram + "\"")
 //    val context = req.getSession.getServletContext
     renderer(req:HttpServletRequest).process(diagram, opt)
   }

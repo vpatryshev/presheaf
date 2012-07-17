@@ -1,7 +1,7 @@
 package org.presheaf
 
-import org.presheaf.DiagramRenderer._
-import org.presheaf.HtmlSnippets._
+import DiagramRenderer._
+import HtmlSnippets._
 import javax.servlet.http._
 
 class DiagramSamples extends PresheafServlet {
@@ -18,6 +18,10 @@ class DiagramSamples extends PresheafServlet {
           <a href="http://ctan.org/tex-archive/macros/generic/diagrams/xypic/xy/doc/xyguide.pdf">This pdf</a> tells in details how to write diagrams in xypic format.
         </p>
         { signature }
+        <hr/>
+          {
+//             Res.read("/samples.txt")
+          }
      </body>
    </html>
   }

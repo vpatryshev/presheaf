@@ -1,1 +1,0 @@
-ssh -i src2pdf20101223.pem ubuntu@ec2-50-17-126-239.compute-1.amazonaws.com 

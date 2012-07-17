@@ -69,11 +69,11 @@ class DiagramService extends PresheafServlet {
       }
     } catch {
       case bd: BadDiagram => {
-        println("Diagram service: bad diagram, " + bd.getMessage)
+        OS.log("Diagram service: bad diagram, " + bd.getMessage)
         res.sendError(500, bd.getMessage)
       }
       case e: Throwable   => {
-        println("Diagram service: an exception")
+        OS.log("Diagram service: an exception")
         e.printStackTrace
         res.getWriter.print(json(Map("error" -> e.getMessage)))
         res.sendError(500, "Error while processing the diagram: " + e.getMessage)
