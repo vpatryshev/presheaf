@@ -83,7 +83,7 @@ function sortByValue(map) {
   return a
 }
 
-var MAX_HISTORY_LENGTH = 9
+var MAX_HISTORY_LENGTH = 12
 
 function getHistory() {
   var cookie = document.cookie
