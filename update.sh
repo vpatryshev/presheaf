@@ -36,7 +36,7 @@ while true; do
       ./callme.sh
     fi
   fi
-  echo "Waiting for a file..."
+  echo "`date`: Waiting for a file..."
   sleep 31
 done
 

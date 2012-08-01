@@ -1,0 +1,16 @@
+cat <<EOF
+% tikz diagram
+\documentclass{article}
+\usepackage{graphics}
+\usepackage{tikz}
+\pgfrealjobname{survey}
+\begin{document}
+
+\beginpgfgraphicnamed{$1}
+  \begin{tikzpicture}
+`cat $1.src`
+  \end{tikzpicture}
+\endpgfgraphicnamed
+
+\end{document}
+EOF

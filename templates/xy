@@ -1,0 +1,12 @@
+cat <<EOF
+\documentclass[12pt,notitlepage]{article}
+\usepackage[all]{xy}
+
+\begin{document}
+
+\thispagestyle{empty}
+
+\[\xymatrix{
+`cat $1.src`
+}\]\end{document}
+EOF
