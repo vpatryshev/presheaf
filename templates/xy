@@ -8,5 +8,6 @@ cat <<EOF
 
 \[\xymatrix{
 `cat $1.src`
-}\]\end{document}
+}\]
+\end{document}
 EOF

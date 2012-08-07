@@ -73,7 +73,6 @@ class DiagramRenderer(val cache: File) {
   }
 
   def doWithScript(diagram: String, name: String) = {
-//    println("DiagramRenderer running diagram with script: " + name)
     val file = diagramFile(name)
     val src: File = withExtension(file, "src")
     val srcFile = new FileOutputStream(src)
@@ -82,19 +81,11 @@ class DiagramRenderer(val cache: File) {
     val img: File = withExtension(file, "png")
     val pdf: File = withExtension(file, "pdf")
     val log = new ListBuffer[Node]
-    val pw = new FileOutputStream(file)
-    pw.write(XYDiagram.buildTex(diagram).getBytes)
-    pw.close
 
-    if (!file.exists) throw new BadDiagram("System error, diagram file missing after writing: " + file.getAbsolutePath)
-    if (!file.canRead) throw new BadDiagram("System error, can't read new file " + file.getAbsolutePath)
-
-    val command  = "sh /root/doxy.sh "  + name
+    val command  = "sh /root/doit.sh "  + name
     // TODO: figure out wtf I transform an option to a tuple. it's wrong!
-    runM("doxy.sh" -> command, log, DiagramRenderer.env)
-    val result = (name, diagram, img, pdf, log)
-//    println("DiagramRenderer: seems to succeed: " + result)
-    result
+    runM("doit.sh" -> command, log, DiagramRenderer.env)
+    (name, diagram, img, pdf, log)
   }
 }
 

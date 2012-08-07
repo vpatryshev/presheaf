@@ -1,6 +1,6 @@
 cat <<EOF
 % tikz diagram
-\documentclass{article}
+\documentclass[12pt,notitlepage]{article}
 \usepackage{graphics}
 \usepackage{tikz}
 \pgfrealjobname{survey}

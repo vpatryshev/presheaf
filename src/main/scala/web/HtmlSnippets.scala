@@ -13,7 +13,7 @@ object HtmlSnippets {
     "?"
   }
 
-  def version = "1." + buildNo
+  def version = "2." + buildNo
   
   def signature = <font size="-2"> v.{ version } Copyright (c) Vlad Patryshev</font> <br/><i>Questions? <a href="mail:vpatryshev@gmail.com">ask me</a></i>
 

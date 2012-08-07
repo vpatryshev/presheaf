@@ -1,5 +1,5 @@
 # Generates images; pass file name without extension
-HOME=.
+HOME=/root
 CACHE=$HOME/diagrams
 NAME=$1
 SRC=$NAME.src

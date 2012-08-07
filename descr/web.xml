@@ -5,32 +5,10 @@
 <web-app>
 
   <servlet>
-    <servlet-name>diagrampage</servlet-name>
-    <servlet-class>org.presheaf.DiagramPage</servlet-class>
-    <load-on-startup>2</load-on-startup>
-  </servlet>
-
-  <servlet>
-    <servlet-name>diagramsamples</servlet-name>
-    <servlet-class>org.presheaf.DiagramSamples</servlet-class>
-    <load-on-startup>2</load-on-startup>
-  </servlet>
-
-  <servlet>
     <servlet-name>diagramservice</servlet-name>
     <servlet-class>org.presheaf.DiagramService</servlet-class>
     <load-on-startup>2</load-on-startup>
   </servlet>
-
-  <servlet-mapping>
-    <servlet-name>diagrampage</servlet-name>
-    <url-pattern>/main</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>diagramsamples</servlet-name>
-    <url-pattern>/samples</url-pattern>
-  </servlet-mapping>
 
   <servlet-mapping>
     <servlet-name>diagramservice</servlet-name>

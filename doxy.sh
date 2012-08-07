@@ -1,5 +1,6 @@
-# Generates images; pass file name without extension
-HOME=.
+# Generates pdf and png from xypic; pass file name without extension
+# temporary name is dodoxy.sh; will be renamed back soon
+HOME=/root
 CACHE=$HOME/diagrams
 NAME=$1
 TEX=$NAME.tex
@@ -8,5 +9,5 @@ DVI=$NAME.dvi
 IMG=$NAME.png
 cd $CACHE
 . ../templates/xy $NAME >$TEX
-latex $TEX && dvips -E -o $EPS $DVI && epstopdf -exact $EPS && dvipng -T tight -o $IMG $DVI
+latex $TEX && dvips -E -o $EPS $DVI && epstopdf $EPS && dvipng -T tight -o $IMG $DVI
 rm $EPS $DVI $NAME.log $NAME.aux
