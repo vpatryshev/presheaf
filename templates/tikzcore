@@ -1,0 +1,17 @@
+cat <<EOF
+% tikz diagram
+\documentclass[12pt,notitlepage]{article}
+
+\usepackage{graphics}
+\usepackage{tikz}
+\usetikzlibrary{arrows,automata,matrix,snakes,backgrounds}
+
+\pgfrealjobname{ignorethis}
+\begin{document}
+
+\beginpgfgraphicnamed{$1}
+`cat $1.src`
+\endpgfgraphicnamed
+
+\end{document}
+EOF
