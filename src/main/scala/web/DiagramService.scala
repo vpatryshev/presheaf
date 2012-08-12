@@ -9,12 +9,11 @@ class DiagramService extends PresheafServlet {
   val xyError = ".*Xy-pic error:(.*)\\\\xyerror.*".r
 
   val Q = "\""
-  def quote(s: String) = Q + s.replaceAll(Q, "").replaceAll("\\\\", "\\\\\\\\") + Q
+  def quote(s: String) = Q + s.replaceAll(Q, "").replaceAll("\\\\", "\\\\\\\\").replaceAll("\n", "\\\\n") + Q
   def json(s: String): String = quote(s)
   def json(nvp: (String,_)): String = json(nvp._1) + ":" + json(nvp._2.toString)
   def json(map: Map[String, _]): String = map.map(json(_)).mkString("{", ",", "}")
   def json(seq: Iterator[String]): String = seq.map(json).mkString("[", ",\n", "]")
-//  def json(seq: Iterator[Map[String, _]]): String = seq.map(json).mkString("[", ",\n", "]")
   def json(seq: Iterable[String]): String = json(seq.iterator)
 
   def errorLog(logs: Iterable[Node]) = {

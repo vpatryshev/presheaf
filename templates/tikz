@@ -3,7 +3,8 @@ cat <<EOF
 \documentclass[12pt,notitlepage]{article}
 \usepackage{graphics}
 \usepackage{tikz}
-\pgfrealjobname{survey}
+\usetikzlibrary{arrows,automata,matrix,snakes,backgrounds}
+\pgfrealjobname{ignorethis}
 \begin{document}
 
 \beginpgfgraphicnamed{$1}

@@ -59,7 +59,8 @@ class DiagramRenderer(val cache: File) {
     if (sourceDiagram == null) {
       throw new BadDiagram("No diagram provided")
     } else {
-      val diagram = DiagramRenderer.decode(sourceDiagram)
+      val diagram = sourceDiagram
+
       OS.log("decoded '" + sourceDiagram + "' to '" + diagram + "'")
       val id = idFor(diagram)
       val img: File = new File(cache, id + ".png")
@@ -100,7 +101,6 @@ object DiagramRenderer {
       case _ => if (file.getAbsolutePath.contains("/")) findIt(file.getParentFile) else None
     }
     }
-//    println("homeDir?" + new File(".").getAbsolutePath)
     findIt(new File(new File(".").getAbsolutePath)).get.getAbsolutePath
   }
 

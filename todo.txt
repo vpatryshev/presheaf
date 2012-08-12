@@ -17,16 +17,17 @@ todo
 + ajax
 + try to find a micro ubuntu
   bugs:
-   - ))->\
+   + ))->\
    - history redrawn much later, how come?
+   - do not replace \n with ' '
 - draw categories
-- tikz
+- use sbt
++ tikz
 - http://mathurl.com/
 - http://www.codecogs.com/latex/eqneditor.php
 
 ** separate title and status
-** a matrix with samples
-- use rsync?
++ a matrix with samples
 - box.net api key is n2p8dgkm3s9qdv9xl4vtrt1ils8yix93 (app is presheaf)
 
 
