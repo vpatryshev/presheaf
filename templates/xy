@@ -1,13 +1,15 @@
+cat templates/xy
 cat <<EOF
 \documentclass[12pt,notitlepage]{article}
-\usepackage[all]{xy}
+\usepackage[all,cmtip,2cell]{xy}
+\UseTwocells
 
 \begin{document}
 
 \thispagestyle{empty}
 
 \[\xymatrix{
-`cat $1.src`
+`cat $1.src | tr '\n' ' '`
 }\]
 \end{document}
-EOF
+
