@@ -1,33 +1,17 @@
 todo
 
-+ remove chars < ' ' from text 
-+ file names m.b. mda
-+ use scp
-+ wtf with stale classes in tomcat?!
-+ have a script instead of chain of commands
-+ git
-+ figure out what's wrong with this: T[T[X]] \ar[r]^{m_X} \ar[d]_{T[T[f]]} &T[X]\ar[d]^{T[f]}\\ T[T[Y]] \ar[r]^{m_Y} &T[Y]
-+ make sure root app update works (whatever)
-* include all examples from xydoc
-+ make all the examples work
-+ favico
-? make it run locally
+- have pdf in iframe
 * http://www.websequencediagrams.com/
-+ store session? cookie?, show last instances
-+ ajax
-+ try to find a micro ubuntu
   bugs:
    + ))->\
    - history redrawn much later, how come?
    - do not replace \n with ' '
 - draw categories
 - use sbt
-+ tikz
 - http://mathurl.com/
 - http://www.codecogs.com/latex/eqneditor.php
 
 ** separate title and status
-+ a matrix with samples
 - box.net api key is n2p8dgkm3s9qdv9xl4vtrt1ils8yix93 (app is presheaf)
 
 

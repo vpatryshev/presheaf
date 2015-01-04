@@ -45,7 +45,7 @@ object  OS {
       process.destroy()
       (Some(process.exitValue), stdout.toString, stderr.toString)
     } catch {
-      case _ => (None, stdout.toString, stderr.toString)
+      case _:Exception => (None, stdout.toString, stderr.toString)
     }
   }
 
