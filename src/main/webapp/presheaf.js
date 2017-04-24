@@ -58,16 +58,19 @@ function quoteRef(id) {
 }
 
 function justShow(id) {
-  $("d_png").src  = imgRef(id)
-  $("d_pdf").href = pdfRef(id)
-  $("d_quote").value = quoteRef(id)
-  getSrc(id)
+  var ref = pdfRef(id);
+  $("d_png").src  = imgRef(id);
+  $("d_pdf").href = ref;
+  $("d_pdf_e").src = ref;
+  $("d_pdf_o").data = ref;
+  $("d_quote").value = quoteRef(id);
+  getSrc(id);
   $("d_results").style.display="block"
 }
 
 function choose(imgsrc) {
-  var id = imgsrc.match("/([^\./]+)\.png")[1]
-  addToHistory(id)
+  var id = imgsrc.match("/([^\\./]+)\\.png")[1];
+  addToHistory(id);
   justShow(id)
 }
 
@@ -86,12 +89,12 @@ function sortByValue(map) {
 var MAX_HISTORY_LENGTH = 12
 
 function getHistory() {
-  var cookie = document.cookie
-  if (!cookie) return {}
-  var matches = cookie.match(/(^|;)\s*History=([^;]+)/)
-  if (!matches) return {}
-  var ids = matches[2].split(",")
-  var history = {}
+  var cookie = document.cookie;
+  if (!cookie) return {};
+  var matches = cookie.match(/(^|;)\s*History=([^;]+)/);
+  if (!matches) return {};
+  var ids = matches[2].split(",");
+  var history = {};
   for (i = 0; i < ids.length; i++) {
     if (ids[i] != 'length') {
       history[ids[i]] = MAX_HISTORY_LENGTH * 100 - i
@@ -100,15 +103,15 @@ function getHistory() {
   return history
 }
 
-var myHistory = getHistory()
+var myHistory = getHistory();
 
 function addToHistory(id) {
-  myHistory[id] = new Date().getTime()
+  myHistory[id] = new Date().getTime();
   showHistory()
 }
 
 function showHistory() {
-  var sorted = sortByValue(myHistory)
+  var sorted = sortByValue(myHistory);
   // now kick out the last one
   if (sorted.length > MAX_HISTORY_LENGTH) {
     for (i = MAX_HISTORY_LENGTH; i < sorted.length; i++) {
@@ -116,22 +119,22 @@ function showHistory() {
     }
     sorted = sorted.splice(MAX_HISTORY_LENGTH, sorted.length - MAX_HISTORY_LENGTH)
   }
-  document.cookie = 'History=' + sorted.join(",") + ';expires=July 19, 2051'
+  document.cookie = 'History=' + sorted.join(",") + ';expires=July 19, 2051';
   fillImages(sorted)
 }
 
 
 function fillImages(ids) {
-  var loadedImages = []
+  var loadedImages = [];
 
   for (i = 0; i < ids.length; i++) {
-    var id = ids[i]
-    loadedImages[i] = image(id)
-    loadedImages[i].id = "h." + i
+    var id = ids[i];
+    loadedImages[i] = image(id);
+    loadedImages[i].id = "h." + i;
     loadedImages[i].onload = function() {
-      var key = this.id
-      $(key).src = this.src
-      $(key).width = Math.min(100, this.width)
+      var key = this.id;
+      $(key).src = this.src;
+      $(key).width = Math.min(100, this.width);
       $(key).style.visibility='visible'
     }
   }
