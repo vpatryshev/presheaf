@@ -25,7 +25,7 @@ ScoverageSbtPlugin.instrumentSettings
 
 CoverallsPlugin.coverallsSettings
 
-val deploy = taskKey[Unit]("Deploy the packaged .war file via heroku")
+val deploy = taskKey[Unit]("Deploy the packaged .war file")
 
 deploy := {
   val (_, warFile) = (packagedArtifact in (Compile, packageWar)).value

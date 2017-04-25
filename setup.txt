@@ -9,6 +9,17 @@ Tried default amazon for micro (ami8c1fece5)
 when started, right-click the "running" in "instances" tab
 ssh there
 
+#login:
+ ssh -i "~/.ssh/presheaf_aws.pem" ubuntu@ec2-54-202-27-59.us-west-2.compute.amazonaws.com
+
+# on the instance:
+sudo add-apt-repository
+sudo add-apt-repository ppa:webupd8team/java
+sudo apt-get update
+sudo apt-get install oracle-java8-installer
+
+
+
 see also http://yoodey.com/removing-openjdk-jre-ubuntu-1010-ec2-amazon-and-install-sun-java-6-jre-jdk
 
 ssh -i src2pdf20101223.pem ubuntu@ec2-(ip s/\./-/g).compute-1.amazonaws.com

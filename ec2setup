@@ -4,8 +4,11 @@ echo "deb-src http://us.archive.ubuntu.com/ubuntu/ maverick-updates multiverse" 
 sudo cp tmp.tmp /etc/apt/sources.list
 rm tmp.tmp
 
+echo "Creating a new user, 'presheaf', you sill need to set the password (you know it)"
 sudo useradd -d /home/presheaf -m presheaf
 sudo passwd presheaf
+
+export THIS="ec2-54-213-94-189.us-west-2.compute.amazonaws.com"
 export GET="sudo apt-get -qy install"
 
 sudo apt-get -qy update
@@ -39,6 +42,10 @@ cd ~
 ## doxy.sh should have a+x
 ## same for deploy.sh
 
+sudo add-apt-repository ppa:webupd8team/java
+sudo apt-get update
+sudo apt-get install oracle-java8-installer
+
 mkdir diagrams
 chmod a+x,a+r,a+w diagrams
 sudo apt-get -qy install mc
@@ -54,8 +61,8 @@ sudo apt-get install vsftpd
 sudo iptables -A INPUT -i eth0 -p tcp --dport 80 -j ACCEPT
 sudo iptables -A INPUT -i eth0 -p tcp --dport 8080 -j ACCEPT
 sudo iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8080 
-sudo iptables -t nat -A OUTPUT -d ec2-50-16-140-142.compute-1.amazonaws.com -p tcp --dport 80 -j REDIRECT --to-ports 8080
-sudo iptables -t nat -A PREROUTING -d ec2-50-16-140-142.compute-1.amazonaws.com -p tcp --dport 80 -j REDIRECT --to-ports 8080
+sudo iptables -t nat -A OUTPUT -d $THIS -p tcp --dport 80 -j REDIRECT --to-ports 8080
+sudo iptables -t nat -A PREROUTING -d $THIS -p tcp --dport 80 -j REDIRECT --to-ports 8080
 ln -s /var/lib/tomcat6 tomcat
 ln -s /var/log/tomcat6 tomcatlogs
 
