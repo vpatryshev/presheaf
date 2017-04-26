@@ -5,10 +5,11 @@ export JAVA_HOME=/usr/share/java
 export FILE='presheaf.war'
 export DLDIR="$HOMEDIR/download"
 export DOWNLOAD="$DLDIR/$FILE"
+export TOMCAT=/opt/tomcat
 
 export UPFILE="DLDIR/update.sh"
 export FLAGFILE="$DLDIR/ready.flag"
-export CATALINA_BASE=/var/lib/tomcat6
+export CATALINA_BASE=$TOMCAT
 export APPDIR="$CATALINA_BASE/webapps"
 export ROOTAPP="$APPDIR/ROOT.war"
 export ROOTAPPDIR="$APPDIR/ROOT"
@@ -23,9 +24,9 @@ while true; do
     cp $DOWNLOAD $ROOTAPP
     echo "now we have deployed $ROOTAPP ... "
     ls -l $ROOTAPP
-    sudo service tomcat6 stop
+    sudo service tomcat stop
     rm -rf $ROOTAPPDIR
-    sudo service tomcat6 start
+    sudo service tomcat start
     sleep 60
     cd tomcat/webapps/ROOT
     ln -s catalina.out ../../logs/catalina.out

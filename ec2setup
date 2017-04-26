@@ -52,19 +52,25 @@ sudo apt-get -qy install mc
 
 source ~ubuntu/.bashrc
 java -version
-$GET tomcat6-admin
-$GET tomcat6-examples
-$GET tomcat6
-sudo mkdir /usr/share/tomcat6/logs
-sudo ln -s diagrams /usr/share/tomcat6/webapps/cache
+#$GET tomcat6-admin
+#$GET tomcat6-examples
+#$GET tomcat6
+
+#see https://www.digitalocean.com/community/tutorials/how-to-install-apache-tomcat-8-on-ubuntu-16-04
+
+export TOMCAT=/opt/tomcat
+sudo mkdir $TOMCAT/logs
+sudo ln -s diagrams $TOMCAT/webapps/cache
 sudo apt-get install vsftpd
 sudo iptables -A INPUT -i eth0 -p tcp --dport 80 -j ACCEPT
 sudo iptables -A INPUT -i eth0 -p tcp --dport 8080 -j ACCEPT
 sudo iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8080 
 sudo iptables -t nat -A OUTPUT -d $THIS -p tcp --dport 80 -j REDIRECT --to-ports 8080
 sudo iptables -t nat -A PREROUTING -d $THIS -p tcp --dport 80 -j REDIRECT --to-ports 8080
-ln -s /var/lib/tomcat6 tomcat
-ln -s /var/log/tomcat6 tomcatlogs
+ln -s $TOMCAT tomcat
+ln -s $TOMCAT tomcatlogs
+curl https://raw.githubusercontent.com/vpatryshev/presheaf/master/update.sh
+
 
 
 
