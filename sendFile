@@ -1,2 +1,2 @@
 source ./instance
-scp -i $KEYFILE $1 ubuntu@$INSTANCE_URL:/home/ubuntu/`basename $1`
+scp -i $KEYFILE $1 $HOMETHERE/download/`basename $1`

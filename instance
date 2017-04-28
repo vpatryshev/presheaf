@@ -1,6 +1,15 @@
 export INSTANCE_ID="i-08d6410cc134f48ce"
 export INSTANCE_URL="ec2-54-213-94-189.us-west-2.compute.amazonaws.com"
 export INSTANCE_IP="54.213.94.189"
+export INSTANCE_USER=ubuntu
+export METHERE="$INSTANCE_USER@$INSTANCE_IP"
+export INSTANCE_HOME=/home/ubuntu
+export CACHE=$INSTANCE_HOME/diagrams
+export HOMETHERE="$METHERE:$INSTANCE_HOME"
 export KEYNAME="presheaf_aws"
 export KEYFILE=~/.ssh/$KEYNAME.pem
-export SSH="ssh -i ~/.ssh/presheaf_aws.pem $1 ubuntu@$INSTANCE_URL"
+export SSH="ssh -i ~/.ssh/presheaf_aws.pem $METHERE"
+export WEBAPPS="/opt/tomcat/webapps"
+export SCP="./sendFile"
+
+

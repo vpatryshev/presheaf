@@ -1,6 +1,5 @@
 # Generates images; pass file name without extension
-HOME=/root
-CACHE=$HOME/diagrams
+source instance
 NAME=$1
 SRC=$NAME.src
 TEX=$NAME.tex

@@ -1,7 +1,6 @@
 # Generates pdf and png from xypic; pass file name without extension
 # temporary name is dodoxy.sh; will be renamed back soon
-HOME=/root
-CACHE=$HOME/diagrams
+source instance
 NAME=$1
 TEX=$NAME.tex
 EPS=$NAME.eps

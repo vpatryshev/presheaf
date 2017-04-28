@@ -1,0 +1,2 @@
+curl https://raw.githubusercontent.com/vpatryshev/presheaf/master/$1 >$1
+chmod a+x,a+r $1

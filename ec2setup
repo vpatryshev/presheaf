@@ -4,6 +4,8 @@ echo "deb-src http://us.archive.ubuntu.com/ubuntu/ maverick-updates multiverse" 
 sudo cp tmp.tmp /etc/apt/sources.list
 rm tmp.tmp
 
+#see also CHEAP HOSTING: https://blog.online.net/2017/04/27/scaleway-disruptive-armv8-cloud-servers/
+
 echo "Creating a new user, 'presheaf', you sill need to set the password (you know it)"
 sudo useradd -d /home/presheaf -m presheaf
 sudo passwd presheaf
@@ -56,6 +58,19 @@ java -version
 #$GET tomcat6-examples
 #$GET tomcat6
 
+# how to mount volume on ec2
+#https://www.question-defense.com/2012/06/02/create-and-mount-amazon-aws-ec2-ebs-storage-to-aws-ec2-linux-instance
+
+# Have to create diagrams folder, connecting it to box.
+#http://www.math.cmu.edu/~gautam/sj/blog/20150807-box-webdav.html
+sudo apt-get install davfs2
+#???add https://dav.box.com/dav /home/ubuntu/net/box davfs user,rw,noauto 0 0
+#add https://www.box.com/dav /box davfs rw,user,noauto 0 0
+sudo nano /etc/fstab
+sudo gpasswd -a tomcat davfs2
+sudo gpasswd -a ubuntu davfs2
+nano ~/.davfs2/secrets
+
 #see https://www.digitalocean.com/community/tutorials/how-to-install-apache-tomcat-8-on-ubuntu-16-04
 
 export TOMCAT=/opt/tomcat
@@ -69,8 +84,17 @@ sudo iptables -t nat -A OUTPUT -d $THIS -p tcp --dport 80 -j REDIRECT --to-ports
 sudo iptables -t nat -A PREROUTING -d $THIS -p tcp --dport 80 -j REDIRECT --to-ports 8080
 ln -s $TOMCAT tomcat
 ln -s $TOMCAT tomcatlogs
-curl https://raw.githubusercontent.com/vpatryshev/presheaf/master/update.sh
 
+sudo systemctl daemon-reload
+sudo systemctl start tomcat
+sudo systemctl status tomcat
 
+curl https://raw.githubusercontent.com/vpatryshev/presheaf/master/downloadScript >downloadScript
+chmod a+x downloadScript
 
+call ./downloadScript instance
+call ./downloadScript update.sh
+call ./downloadScript doit.sh
+call ./downloadScript dotikz.sh
+call ./downloadScript doxy.sh
 
