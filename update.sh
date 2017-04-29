@@ -20,12 +20,12 @@ while true; do
     rm $FLAGFILE
     echo Found $DOWNLOAD and $FLAGFILE
     echo "Removing old $ROOTAPP"
-    rm $ROOTAPP
-    cp $DOWNLOAD $ROOTAPP
+#    sudo rm -rf $ROOTAPP
+    sudo cp $DOWNLOAD $ROOTAPP
     echo "now we have deployed $ROOTAPP ... "
     ls -l $ROOTAPP
     sudo service tomcat stop
-    rm -rf $ROOTAPPDIR
+    sudo rm -rf $ROOTAPPDIR
     sudo service tomcat start
     sleep 60
     cd tomcat/webapps/ROOT
@@ -40,4 +40,3 @@ while true; do
   echo "`date`: Waiting for a file..."
   sleep 31
 done
-

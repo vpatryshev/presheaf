@@ -1,5 +1,5 @@
 # Generates images; pass file name without extension
-source instance
+. instance
 NAME=$1
 SRC=$NAME.src
 TEX=$NAME.tex

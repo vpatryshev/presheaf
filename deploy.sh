@@ -2,15 +2,12 @@
 set -euo 
 #pipefail
 
-source instance
+. instance
 
 mkdir -p uploads
 mkdir -p archive
 VERFILE=src/main/resources/buildno.txt
 VERSION=`cat $VERFILE`
-#SERVER="50.57.81.82" 
-#SERVERHOME="root@$SERVER:/root"
-#KEYS="src2pdf20101223.pem"
 WARFILE=$1
 WARNAME=${WARFILE##*/}
 UP="$SCP uploads/*"

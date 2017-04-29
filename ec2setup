@@ -52,7 +52,7 @@ mkdir diagrams
 chmod a+x,a+r,a+w diagrams
 sudo apt-get -qy install mc
 
-source ~ubuntu/.bashrc
+. ~ubuntu/.bashrc
 java -version
 #$GET tomcat6-admin
 #$GET tomcat6-examples
@@ -97,4 +97,8 @@ call ./downloadScript update.sh
 call ./downloadScript doit.sh
 call ./downloadScript dotikz.sh
 call ./downloadScript doxy.sh
+mkdir templates
+call ./downloadScript templates/tikz
+call ./downloadScript templates/tikzcore
+call ./downloadScript templates/xy
 

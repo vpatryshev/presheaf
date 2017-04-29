@@ -1,6 +1,6 @@
-export INSTANCE_ID="i-08d6410cc134f48ce"
-export INSTANCE_URL="ec2-54-213-94-189.us-west-2.compute.amazonaws.com"
-export INSTANCE_IP="54.213.94.189"
+export INSTANCE_ID="i-0c65d4a817692dd9e"
+export INSTANCE_IP="54.244.212.218"
+export INSTANCE_URL="ec2-${INSTANCE_IP//./-}.us-west-2.compute.amazonaws.com"
 export INSTANCE_USER=ubuntu
 export METHERE="$INSTANCE_USER@$INSTANCE_IP"
 export INSTANCE_HOME=/home/ubuntu

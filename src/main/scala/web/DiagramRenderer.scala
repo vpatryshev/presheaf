@@ -83,7 +83,7 @@ class DiagramRenderer(val cache: File) {
     val pdf: File = withExtension(file, "pdf")
     val log = new ListBuffer[Node]
 
-    val command  = "sh /root/doit.sh "  + name
+    val command  = "sh /home/ubuntu/doit.sh "  + name
     // TODO: figure out wtf I transform an option to a tuple. it's wrong!
     runM("doit.sh" -> command, log, DiagramRenderer.env)
     (name, diagram, img, pdf, log)
