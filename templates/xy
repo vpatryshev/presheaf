@@ -1,4 +1,3 @@
-cat templates/xy
 cat <<EOF
 \documentclass[12pt,notitlepage]{article}
 \usepackage[all,cmtip,2cell]{xy}

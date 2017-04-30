@@ -34,10 +34,6 @@ function pdfRef(id) {
   return "cache/" + id + ".pdf"
 }
 
-function permanentRef(id) {
-
-}
-
 function imgRef(id) {
   return "cache/" + id + ".png"
 }
@@ -68,50 +64,42 @@ function justShow(id) {
   $("d_results").style.display="block"
 }
 
-function choose(imgsrc) {
-  var id = imgsrc.match("/([^\\./]+)\\.png")[1];
-  addToHistory(id);
+function choose(i) {
+  var id = $("hi."+i).src.match("/([^\\./]+)\\.png")[1];
   justShow(id)
 }
 
-function sortByValue(map) {
+function sortByDate(map) {
   var a = []
   for (key in map) {
     if (map.hasOwnProperty(key))
     a.push(key)
   }
 
-  a.sort(function(x,y) { return map[x] < map[y] })
+  a.sort(function(x,y) { return map[x].date < map[y].date })
 
   return a
 }
 
-var MAX_HISTORY_LENGTH = 12
+var MAX_HISTORY_LENGTH = 1000
 
 function getHistory() {
-  var cookie = document.cookie;
-  if (!cookie) return {};
-  var matches = cookie.match(/(^|;)\s*History=([^;]+)/);
-  if (!matches) return {};
-  var ids = matches[2].split(",");
-  var history = {};
-  for (i = 0; i < ids.length; i++) {
-    if (ids[i] != 'length') {
-      history[ids[i]] = MAX_HISTORY_LENGTH * 100 - i
-    }
-  }
-  return history
+  if (!localStorage.history) localStorage.history = "{}"
+  return JSON.parse(localStorage.history)
 }
 
 var myHistory = getHistory();
 
-function addToHistory(id) {
-  myHistory[id] = new Date().getTime();
+function addToHistory(id, text) {
+  if (!myHistory[id]) myHistory[id] = {};
+  myHistory[id].date = new Date().getTime();
+  myHistory[id].text = text
+  localStorage.history = JSON.stringify(myHistory);
   showHistory()
 }
 
 function showHistory() {
-  var sorted = sortByValue(myHistory);
+  var sorted = sortByDate(myHistory);
   // now kick out the last one
   if (sorted.length > MAX_HISTORY_LENGTH) {
     for (i = MAX_HISTORY_LENGTH; i < sorted.length; i++) {
@@ -119,7 +107,6 @@ function showHistory() {
     }
     sorted = sorted.splice(MAX_HISTORY_LENGTH, sorted.length - MAX_HISTORY_LENGTH)
   }
-  document.cookie = 'History=' + sorted.join(",") + ';expires=July 19, 2051';
   fillImages(sorted)
 }
 
@@ -130,9 +117,9 @@ function fillImages(ids) {
   for (i = 0; i < ids.length; i++) {
     var id = ids[i];
     loadedImages[i] = image(id);
-    loadedImages[i].id = "h." + i;
+    loadedImages[i].id = "hi." + i;
     loadedImages[i].onload = function() {
-      var key = this.id;
+      let key = this.id;
       $(key).src = this.src;
       $(key).width = Math.min(100, this.width);
       $(key).style.visibility='visible'
@@ -140,10 +127,10 @@ function fillImages(ids) {
   }
 }
 
-function show(diagram) {
+function show(diagram, sourceText) {
   setState("Here's your diagram")
   justShow(diagram.id)
-  addToHistory(diagram.id)
+  addToHistory(diagram.id, sourceText)
 }
 
 function xhr(uri, onwait, onload, onerror) {
@@ -186,7 +173,7 @@ function send(input, format) {
         } else {
           response.image = image(response.id)
           response.image.onload = function() {
-            show(response)
+            show(response, input)
           }
         }
       },
@@ -261,8 +248,9 @@ window.onload = function() {
   var historyHtml = ""
   for (var i = 0; i < MAX_HISTORY_LENGTH; i++) {
     historyHtml += "<div class=diagramEntry>"
-                 + "<img id=\"h." + i + "\" width=100 style='visibility:hidden' "
-                 + "onclick='choose(this.src)'/>" + "</div>"
+                 + "<div id=\"hs." + i + "\" style='visibility:hidden'></div>"  
+                 + "<img id=\"hi." + i + "\" width=100 style='visibility:hidden' "
+                 + "onclick='choose(" + i + ")'/>" + "</div>"
   }
   $("history").innerHTML = historyHtml
   showHistory()

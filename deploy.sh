@@ -7,7 +7,7 @@ set -euo
 mkdir -p uploads
 mkdir -p archive
 VERFILE=src/main/resources/buildno.txt
-VERSION=`cat $VERFILE`
+VERSION=`head -1 $VERFILE`
 WARFILE=$1
 WARNAME=${WARFILE##*/}
 UP="$SCP uploads/*"

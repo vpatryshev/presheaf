@@ -20,7 +20,7 @@ while true; do
     rm $FLAGFILE
     echo Found $DOWNLOAD and $FLAGFILE
     echo "Removing old $ROOTAPP"
-#    sudo rm -rf $ROOTAPP
+    sudo rm -rf $ROOTAPP
     sudo cp $DOWNLOAD $ROOTAPP
     echo "now we have deployed $ROOTAPP ... "
     ls -l $ROOTAPP
@@ -28,8 +28,11 @@ while true; do
     sudo rm -rf $ROOTAPPDIR
     sudo service tomcat start
     sleep 60
-    cd tomcat/webapps/ROOT
-    ln -s catalina.out ../../logs/catalina.out
+    
+    sudo cd tomcat/webapps/ROOT
+    sudo ln -s catalina.out ../../logs/catalina.out
+    sudo chmod a+r,a+w,a+x catalina.out
+
     echo `date` Done updating.
 
     if [ -f $UPFILE ]; then
@@ -37,6 +40,4 @@ while true; do
       ./callme.sh
     fi
   fi
-  echo "`date`: Waiting for a file..."
-  sleep 31
-done
+  echo "`d
