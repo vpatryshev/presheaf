@@ -28,10 +28,12 @@ while true; do
     sudo rm -rf $ROOTAPPDIR
     sudo service tomcat start
     sleep 60
-    
-    sudo cd tomcat/webapps/ROOT
-    sudo ln -s catalina.out ../../logs/catalina.out
-    sudo chmod a+r,a+w,a+x catalina.out
+    sudo chmod a+r,a+x $ROOTAPPDIR
+    ls tomcat/webapps
+#    cd $ROOTAPPDIR
+
+#    sudo ln -s catalina.out ../../logs/catalina.out
+#    sudo chmod a+r,a+w,a+x catalina.out
 
     echo `date` Done updating.
 
@@ -40,4 +42,6 @@ while true; do
       ./callme.sh
     fi
   fi
-  echo "`d
+  echo "`date`: Waiting for a file..."
+  sleep 31
+done

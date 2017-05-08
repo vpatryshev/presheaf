@@ -1,6 +1,6 @@
 package org.presheaf
 
-import java.io.{File, FileOutputStream}
+import java.io.{IOException, File, FileOutputStream}
 import collection.mutable.ListBuffer
 import scala.xml._
 import util.matching.Regex
@@ -74,14 +74,20 @@ class DiagramRenderer(val cache: File) {
   }
 
   def doWithScript(diagram: String, name: String) = {
+    val log = new ListBuffer[Node]
     val file = diagramFile(name)
     val src: File = withExtension(file, "src")
-    val srcFile = new FileOutputStream(src)
-    srcFile.write(diagram.getBytes)
-    srcFile.close
+    try {
+      val srcFile = new FileOutputStream(src)
+      srcFile.write(diagram.getBytes)
+      srcFile.close
+    } catch {
+      case ioe: IOException => 
+        System.out.println(s"Got an $ioe while trying to write to $src - $diagram")
+        log += <p>Diagram already in the system, can't override</p>
+    }
     val img: File = withExtension(file, "png")
     val pdf: File = withExtension(file, "pdf")
-    val log = new ListBuffer[Node]
 
     val command  = "sh /home/ubuntu/doit.sh "  + name
     // TODO: figure out wtf I transform an option to a tuple. it's wrong!

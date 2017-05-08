@@ -65,7 +65,7 @@ function justShow(id) {
 }
 
 function choose(i) {
-  var id = $("hi."+i).src.match("/([^\\./]+)\\.png")[1];
+  var id = $("i."+i).src.match("/([^\\./]+)\\.png")[1];
   justShow(id)
 }
 
@@ -84,7 +84,21 @@ function sortByDate(map) {
 var MAX_HISTORY_LENGTH = 1000
 
 function getHistory() {
-  if (!localStorage.history) localStorage.history = "{}"
+  if (!localStorage.history) {
+    localStorage.history = "{}"
+    var cookie = document.cookie;
+    if (!cookie) return {};
+    var matches = cookie.match(/(^|;)\s*History=([^;]+)/);
+    if (!matches) return {};
+    var ids = matches[2].split(",");
+    var history = {};
+    for (i = 0; i < ids.length; i++) {
+      if (ids[i] != 'length') {
+        history[ids[i]] = {date: MAX_HISTORY_LENGTH * 100 - i, text: ''}
+      }
+    }
+    localStorage.history = JSON.stringify(history);
+  }
   return JSON.parse(localStorage.history)
 }
 
@@ -107,6 +121,7 @@ function showHistory() {
     }
     sorted = sorted.splice(MAX_HISTORY_LENGTH, sorted.length - MAX_HISTORY_LENGTH)
   }
+  document.cookie = 'History=X;expires=May 01, 2017';
   fillImages(sorted)
 }
 
@@ -117,7 +132,8 @@ function fillImages(ids) {
   for (i = 0; i < ids.length; i++) {
     var id = ids[i];
     loadedImages[i] = image(id);
-    loadedImages[i].id = "hi." + i;
+    loadedImages[i].id = "i." + i;
+    $("ai." + i).title = myHistory[id].text
     loadedImages[i].onload = function() {
       let key = this.id;
       $(key).src = this.src;
@@ -248,9 +264,9 @@ window.onload = function() {
   var historyHtml = ""
   for (var i = 0; i < MAX_HISTORY_LENGTH; i++) {
     historyHtml += "<div class=diagramEntry>"
-                 + "<div id=\"hs." + i + "\" style='visibility:hidden'></div>"  
-                 + "<img id=\"hi." + i + "\" width=100 style='visibility:hidden' "
-                 + "onclick='choose(" + i + ")'/>" + "</div>"
+                 + "<a id=\"ai." + i + "\"> "  
+                 + "<img id=\"i." + i + "\" width=100 style='visibility:hidden' "
+                 + "onclick='choose(" + i + ")'/></a></div>"
   }
   $("history").innerHTML = historyHtml
   showHistory()
