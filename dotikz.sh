@@ -1,25 +1,35 @@
+# Generates pdf and png from xypic; pass file name without extension
+# temporary name is dodoxy.sh; will be renamed back soon
 # Generates images; pass file name without extension
-. instance
+
+. /home/ubuntu/instance
+
 NAME=$1
-SRC=$NAME.src
 TEX=$NAME.tex
-PNG=$NAME.png
-PDF=$NAME.pdf
+EPS=$NAME.eps
+DVI=$NAME.dvi
+IMG=$NAME.png
 cd $CACHE
 
-grep -q -e "\\\\documentclass" $SRC
+rm -f $TEX $EPS $DVI $IMG
+chmod a+r $NAME
 
-if [ "$?" -eq "0" ]; then
-  cp $SRC $TEX
-else
-  grep -q '{tikzpicture}' $CACHE/$SRC
-  if [ "$?" -eq "0" ]; then
-    ./../templates/tikzcore $NAME > $TEX
-  else
-    . ../templates/tikz $NAME > $TEX
-  fi
+. ../templates/xy $NAME >$TEX
+chmod a+r $TEX
+
+/usr/bin/latex $TEX 
+rlatex=$?
+
+if [ $rlatex != 0 ]; then 
+  echo "latex returned $rlatex"
+  exit $rlatex
 fi
 
-pdflatex --jobname=$NAME $TEX && convert -density 300 $PDF $PNG
+echo "ok, ok"
 
-rm $EPS $DVI $NAME.log $NAME.aux >/dev/null 2>&1
+/usr/bin/dvips -E -o $EPS $DVI && /usr/bin/epstopdf $EPS && /usr/bin/dvipng -T tight -o $IMG $DVI
+r=$?
+
+rm -f $EPS $DVI $NAME.log $NAME.aux
+exit $r
+

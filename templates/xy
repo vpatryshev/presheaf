@@ -1,6 +1,8 @@
 cat <<EOF
 \documentclass[12pt,notitlepage]{article}
 \usepackage[all,cmtip,2cell]{xy}
+\usepackage[utf8x]{inputenc}
+\usepackage{amssymb}
 \UseTwocells
 
 \begin{document}
