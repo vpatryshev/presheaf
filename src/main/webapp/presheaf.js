@@ -1,6 +1,7 @@
 /**
  * Functionality for presheaf.com
  * @author Vlad Patryshev
+ * 2018
  */
 function $(id) {
   return document.getElementById(id) 
@@ -22,7 +23,7 @@ function setState(state) {
 
 function error(msg) {
   setState("error")
-  $("d_error").innerHTML = msg
+  $("d_error").innerHTML = msg.replace(/\n/g, "<br/>")
   hide()
 }
 
@@ -144,7 +145,7 @@ function fillImages(ids) {
 }
 
 function show(diagram, sourceText) {
-  setState("Here's your diagram")
+  setState("Here's your diagram.")
   justShow(diagram.id)
   addToHistory(diagram.id, sourceText)
 }
@@ -224,7 +225,6 @@ function setListeners(image, id) {
     $('s.' + this.id).appendChild(this)
   }
 }
-
 
 function fillIn() {
   xhr("dws?format=xy&in=X",

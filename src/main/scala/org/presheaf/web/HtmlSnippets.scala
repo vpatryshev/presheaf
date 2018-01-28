@@ -11,19 +11,17 @@ object HtmlSnippets {
   val BuildFile: String = "/buildno.txt"
 
   def buildNo: String = try {
-    val vs = Res.read(BuildFile).getLines()
-    if (!vs.hasNext) "No build data" else {
-      val v = vs.next()
-      if (!vs.hasNext) v + "/no build date" else {
-        val d = vs.next()
-        "0000".substring(4 - v.length) + v + " " + d
-      }
+    val vs = Res.read(BuildFile).getLines().toList
+    vs match {
+      case Nil => " No build data"
+      case v::Nil => v + "(no build date)"
+      case v::d::_ => "0000".substring(4 - v.length) + v + " " + d
     }
   } catch {
     case x: Exception => x.getMessage
   }
 
-  def version = "4." + buildNo
+  def version = "1.1.0, build#" + buildNo
   
   def signature = <font size="-2"> v.{ version } Copyright (c) Vlad Patryshev</font> <br/><i>Questions? <a href="mail:vpatryshev@gmail.com">ask me</a></i>
 

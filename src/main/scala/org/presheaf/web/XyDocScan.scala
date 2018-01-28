@@ -12,8 +12,6 @@ object XyDocScan {
 
   def chars(is: InputStream) = bytes(is) filter isText map (_.toChar)
 
-  import org.presheaf.DiagramSamples
-  
   def main(args: Array[String]) {
     val scanner = new XyScanner(chars(new FileInputStream(args(0))))
     for (diagram <- scanner) {
@@ -38,9 +36,7 @@ object XyDocScan {
       }
     }
 
-    def hasNext = {
-      input.hasNext
-    }
+    def hasNext = input.hasNext
 
     private[this] val sb = new StringBuilder
 

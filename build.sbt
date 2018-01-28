@@ -1,29 +1,32 @@
+organization := "presheaf.org"
+
 name := "Presheaf"
 
-organization := "com.vpatryshev"
+version := "1.1.0"
 
-version := "1.1"
 
-val sVer = "2.10.4"
+val WhichScala = "2.12.3"
+val WhichScalatest = "3.0.4"
 
-scalaVersion := sVer
+scalaVersion := WhichScala
 
 //jetty()
 tomcat()
 
 libraryDependencies += "javax.servlet" % "javax.servlet-api" % "3.1.0" % "provided"
 
-libraryDependencies ++= Seq( // test
-    "org.eclipse.jetty" % "jetty-webapp" % "9.1.0.v20131115" % "test"
-  , "org.eclipse.jetty" % "jetty-plus" % "9.1.0.v20131115" % "test"
-  , "javax.servlet" % "javax.servlet-api" % "3.1.0" % "test"
-  ,"org.scala-lang" % "scala-actors" % sVer withSources
-  , "org.scalatest" %% "scalatest" % "1.9.1" % "test"
+libraryDependencies ++= Seq(
+  "org.eclipse.jetty" % "jetty-servlet" % "9.3.12.v20160915",
+  "org.eclipse.jetty" % "jetty-server" % "9.3.12.v20160915"
 )
 
-ScoverageSbtPlugin.instrumentSettings
+// https://mvnrepository.com/artifact/org.scala-lang.modules/scala-xml
+libraryDependencies += "org.scala-lang.modules" %% "scala-xml" % "1.0.6"
 
-CoverallsPlugin.coverallsSettings
+libraryDependencies += "javax.servlet" % "javax.servlet-api" % "3.1.0" % "test"
+
+libraryDependencies += "org.specs2" %% "specs2-core" % "3.8.8" % "test"
+
 
 val deploy = taskKey[Unit]("Deploy the packaged .war file")
 
