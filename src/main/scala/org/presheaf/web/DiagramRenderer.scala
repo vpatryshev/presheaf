@@ -30,7 +30,7 @@ class DiagramRenderer(val cache: File) {
   }
 
   def runM(action: (String, String), logs: ListBuffer[Node], env: Map[String, String]): Option[Int] = {
-    val results = OS.run(action._2, 4000, new File("."), env)
+    val results = OS.run(action._2)
     logs ++= toHtml(action, results)
     results._1
   }
@@ -91,8 +91,14 @@ class DiagramRenderer(val cache: File) {
 
     val command  = "sh /home/ubuntu/doit.sh "  + name
     // TODO: figure out wtf I transform an option to a tuple. it's wrong!
-    runM("doit.sh" -> command, log, DiagramRenderer.env)
-    Diagram(name, source, img, pdf, log)
+    runM("doit.sh" -> command, log, DiagramRenderer.env) match {
+      case Some(0) =>
+        println("\n------OK-------")
+        Diagram(name, source, img, pdf, Nil)
+      case otherwise =>
+        println(s"\n------OOPS $otherwise-------")
+        Diagram(name, source, img, pdf, log)
+    }
   }
 }
 

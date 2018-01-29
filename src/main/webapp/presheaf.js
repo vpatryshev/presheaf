@@ -184,6 +184,7 @@ function send(input, format) {
         $("d_error").innerHTML = ""
       },
       function(text) {
+        console.log("Got response <<<" + text + ">>>")
         var response = eval("(" + text + ")")
         if (response.error) {
           error("Error: " + response.error)
@@ -195,7 +196,6 @@ function send(input, format) {
         }
       },
       function(msg) {
-//        alert("eh..." + msg)
         error(msg)
       }
   )

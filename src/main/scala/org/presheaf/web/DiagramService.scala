@@ -20,6 +20,8 @@ class DiagramService extends PresheafServlet {
 
   def errorLog(logs: Iterable[Node]) = {
     val fullLog = logs.mkString("<br/>").replaceAll("\\\\", "\\\\").replaceAll("\"", "\\\"")
+    println(s"WTF is going on... $fullLog\n\n\n")
+    OS.log(fullLog)
     fullLog match {
       case xyError(msg) =>
         Map(
