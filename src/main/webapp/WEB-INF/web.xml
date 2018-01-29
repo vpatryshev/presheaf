@@ -8,7 +8,7 @@
 
     <servlet>
         <servlet-name>diagramservice</servlet-name>
-        <servlet-class>org.presheaf.DiagramService</servlet-class>
+        <servlet-class>org.presheaf.web.DiagramService</servlet-class>
         <load-on-startup>2</load-on-startup>
     </servlet>
 

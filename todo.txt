@@ -1,13 +1,11 @@
 todo
 
-- have pdf in iframe
 * http://www.websequencediagrams.com/
   bugs:
    + ))->\
    - history redrawn much later, how come?
    - do not replace \n with ' '
 - draw categories
-- use sbt
 - http://mathurl.com/
 - http://www.codecogs.com/latex/eqneditor.php
 

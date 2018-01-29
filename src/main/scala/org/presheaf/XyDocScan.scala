@@ -1,6 +1,6 @@
 package org.presheaf
 
-import java.io.{InputStream, FileInputStream}
+import java.io.{FileInputStream, InputStream}
 
 object XyDocScan {
   def bytes(is: InputStream) : Iterator[Byte] = new Iterator[Byte] {

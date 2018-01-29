@@ -1,9 +1,5 @@
 package org.presheaf
 
-import DiagramRenderer._
-import HtmlSnippets._
-import javax.servlet.http._
-
 
 object DiagramSamples {
 

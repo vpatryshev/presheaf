@@ -1,6 +1,8 @@
-package org.presheaf
+package org.presheaf.web
 
 import java.util.Date
+
+import org.presheaf.Res
 
 import scala.xml._
 import xml.UnprefixedAttribute

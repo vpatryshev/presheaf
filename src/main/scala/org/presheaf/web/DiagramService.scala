@@ -1,7 +1,9 @@
-package org.presheaf
+package org.presheaf.web
 
-import org.presheaf.HtmlSnippets._
+import org.presheaf.{OS, DiagramSamples, Diagram}
+import org.presheaf.web.HtmlSnippets._
 import javax.servlet.http._
+
 import xml.Node
 import java.io.File
 
@@ -12,7 +14,7 @@ class DiagramService extends PresheafServlet {
   def quote(s: String) = Q + s.replaceAll(Q, "").replaceAll("\\\\", "\\\\\\\\").replaceAll("\n", "\\\\n") + Q
   def json(s: String): String = quote(s)
   def json(nvp: (String,_)): String = json(nvp._1) + ":" + json(nvp._2.toString)
-  def json(map: Map[String, _]): String = map.map(json(_)).mkString("{", ",", "}")
+  def json(map: Map[String, _]): String = map.map(json).mkString("{", ",", "}")
   def json(seq: Iterator[String]): String = seq.map(json).mkString("[", ",\n", "]")
   def json(seq: Iterable[String]): String = json(seq.iterator)
 
@@ -33,7 +35,7 @@ class DiagramService extends PresheafServlet {
 
   def produce(req:HttpServletRequest, diagram:String): String = {
     //return Map("error" -> "Sorry, this is broken now, working on it - Vlad, 1:05pm (PDT), 10/14/2011")
-    val (id, source, img, pdf, logs) : (String, String, File, File, Iterable[Node]) = process(req, diagram, req.getParameter("opt"))
+    val Diagram(id, source, img, pdf, logs) = process(req, diagram, req.getParameter("opt"))
     json(
       if (logs.isEmpty) {
         Map(
@@ -56,27 +58,26 @@ class DiagramService extends PresheafServlet {
 
         case "aspng" =>
           res.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY)
-          res.setHeader("Location", ref(process(req)._3))
+          res.setHeader("Location", ref(process(req).img))
 
         case "aspdf" =>
           res.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY)
-          res.setHeader("Location", ref(process(req)._4))
+          res.setHeader("Location", ref(process(req).pdf))
 
         case _ =>
          val result = produce(req, req.getParameter("in"))
          res.getWriter.print(result)
       }
     } catch {
-      case bd: BadDiagram => {
+      case bd: Diagram.Bad => 
         OS.log("Diagram service: bad diagram, " + bd.getMessage)
         res.sendError(500, bd.getMessage)
-      }
-      case e: Throwable   => {
+      
+      case e: Throwable   => 
         OS.log("Diagram service: an exception")
-        e.printStackTrace
+        e.printStackTrace()
         res.getWriter.print(json(Map("error" -> e.getMessage)))
         res.sendError(500, "Error while processing the diagram: " + e.getMessage)
-      }
     }
   }
 }

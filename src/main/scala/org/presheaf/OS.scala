@@ -1,10 +1,10 @@
 package org.presheaf
 
-import java.io.{InputStream, BufferedOutputStream, File}
+import java.io.{BufferedOutputStream, File, InputStream}
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
-import scala.concurrent.{ExecutionContext, Await, Future}
-import ExecutionContext.Implicits.global
+import scala.concurrent.{Await, ExecutionContext, Future}
 
 /**
   * OS - representing Operating System
@@ -24,11 +24,10 @@ object  OS {
           buf.append("\n")
         }
       } catch {
-        case ioe: Any => {
+        case ioe: Any => 
           log("got an ioe")
           log(ioe)
           buf.append('\n').append(ioe.getMessage).append(ioe)
-        }
       }
     )
 

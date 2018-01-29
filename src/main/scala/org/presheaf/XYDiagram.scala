@@ -1,6 +1,5 @@
 package org.presheaf
 
-
 /**
  * Incorporates xy-diagram-related functionality.
  */

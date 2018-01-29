@@ -1,7 +1,7 @@
 /**
  * Functionality for presheaf.com
  * @author Vlad Patryshev
- * 2018
+ * 1/28/2018
  */
 function $(id) {
   return document.getElementById(id) 
@@ -77,7 +77,7 @@ function sortByDate(map) {
     a.push(key)
   }
 
-  a.sort(function(x,y) { return map[x].date < map[y].date })
+  a.sort(function(x,y) { return map[y].date - map[x].date })
 
   return a
 }
@@ -122,7 +122,7 @@ function showHistory() {
     }
     sorted = sorted.splice(MAX_HISTORY_LENGTH, sorted.length - MAX_HISTORY_LENGTH)
   }
-  document.cookie = 'History=X;expires=May 01, 2017';
+  document.cookie = 'History=X;expires=May 01, 2027';
   fillImages(sorted)
 }
 
