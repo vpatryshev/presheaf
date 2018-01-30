@@ -77,30 +77,39 @@ div.diagramEntry img {
 }
 
 div.historyEntry {
-    margin-top: 1em;
-    margin-bottom: 1em;
-    text-align: center;
-    cursor: pointer;
+  position: relative;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  text-align: center;
+  cursor: pointer;
 }
 
 div.historyEntry img {
+  position: relative;
     cursor: pointer;
+}
+
+div.deletion {
+  position: absolute;
+  top: -5px;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  color: red;
+  font-size: 15pt;
 }
 
 .overlay {
   position: absolute;
+  align-content = right;
+  vertical-align = top;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 100%;
-  width: 100%;
   opacity: 0;
   transition: .3s ease;
   background: rgb(0, 0, 0) transparent;
-  color: red;
-  align: right;
-  font-size: 20pt;
 }
 
 div.historyEntry:hover .overlay {

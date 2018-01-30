@@ -65,10 +65,9 @@ function justShow(id) {
   $("d_results").style.display="block"
 }
 
-function choose(i) {
-  var id = $("i."+i).src.match("/([^\\./]+)\\.png")[1];
-  justShow(id)
-}
+idNumber = (i) => $("i."+i).src.match("/([^\\./]+)\\.png")[1]
+
+choose = (i) => justShow(idNumber(i))
 
 function sortByDate(map) {
   var a = []
@@ -105,11 +104,20 @@ function getHistory() {
 
 var myHistory = getHistory();
 
+saveHistory = () => localStorage.history = JSON.stringify(myHistory)
+
 function addToHistory(id, text) {
   if (!myHistory[id]) myHistory[id] = {};
   myHistory[id].date = new Date().getTime();
   myHistory[id].text = text
-  localStorage.history = JSON.stringify(myHistory);
+  saveHistory()
+  showHistory()
+}
+
+deleteFromHistory = (i) => {
+//  $("he."+i).innerHTML = ""
+  delete myHistory[idNumber(i)]
+  saveHistory()
   showHistory()
 }
 
@@ -133,15 +141,18 @@ function fillImages(ids) {
   for (i = 0; i < ids.length; i++) {
     var id = ids[i];
     if (id) {
-    loadedImages[i] = image(id);
-    loadedImages[i].id = "i." + i;
-    $("ai." + i).title = myHistory[id].text
-    loadedImages[i].onload = function() {
-      let key = this.id;
-      $(key).src = this.src;
-      $(key).width = Math.min(100, this.width);
-      $(key).style.visibility='visible'
-    }
+      loadedImages[i] = image(id);
+      loadedImages[i].id = "i." + i;
+      var ref = $("ai." + i)
+      if (ref) {
+        ref.title = myHistory[id].text
+        loadedImages[i].onload = function() {
+          let key = this.id;
+          $(key).src = this.src;
+          $(key).width = Math.min(100, this.width);
+          $(key).style.visibility='visible'
+        }
+      }
     }
   }
 }
@@ -211,11 +222,13 @@ function fillSamples(sources) {
   var loadedImages = []
   for (i = 0; i < sources.length; i++) {
     var id = sources[i].id
-    $("samples" + i % 2).innerHTML += "<div class='diagramEntry' id='s.i." + id + "'/>"
-    loadedImages[i] = image(id)
-    loadedImages[i].id = "i." + id
-    loadedImages[i].alt = sources[i].source
-    setListeners(loadedImages[i], id)
+    if (id) {
+      $("samples" + i % 2).innerHTML += "<div class='diagramEntry' id='s.i." + id + "'/>"
+      loadedImages[i] = image(id)
+      loadedImages[i].id = "i." + id
+      loadedImages[i].alt = sources[i].source
+      setListeners(loadedImages[i], id)
+    }
   }
 }
 
@@ -261,21 +274,28 @@ function getArg(name) {
   if (name = (new RegExp('[?&]' + name + '=([^&]+)')).exec(location.search)) return name[1]
 }
 
-window.onload = function() {
-  fillIn()
+historyFrag = (i) =>
+                   "<div class=historyEntry id=\"he." + i + "\">"
+                 + "<a id=\"ai." + i + "\" onclick='choose(" + i + ")'> "  
+                 + "<img id=\"i." + i + "\" width=100 style='visibility:hidden' />"
+                 + "<div class='overlay'>"
+                 + "<div class=deletion onclick='deleteFromHistory(" + i + ")'>"
+                 + "&times;&nbsp;</div>"
+                 + "</div></a>"
+                 + "</div>"
+                 
+redrawHistory = () => {
   var historyHtml = ""
   for (var i = 0; i < MAX_HISTORY_LENGTH; i++) {
-    historyHtml += "<div class=historyEntry>"
-                 + "<a id=\"ai." + i + "\"> "  
-                 + "<img id=\"i." + i + "\" width=100 style='visibility:hidden' "
-                 + "onclick='choose(" + i + ")'/></a>"
-                 + "<div class='overlay' align='right'>"
-                 + "<div onclick='alert(\"" + i + ": ignore\")'>&times;&nbsp;</div>"
-                 + "</div>"
-                 + "</div>"
+    historyHtml += historyFrag(i)
   }
   $("history").innerHTML = historyHtml
   showHistory()
+}
+
+window.onload = function() {
+  fillIn()
+  redrawHistory()
   var id = getArg('d')
   if (id) justShow(id)
 }
