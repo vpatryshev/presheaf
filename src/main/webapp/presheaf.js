@@ -132,6 +132,7 @@ function fillImages(ids) {
 
   for (i = 0; i < ids.length; i++) {
     var id = ids[i];
+    if (id) {
     loadedImages[i] = image(id);
     loadedImages[i].id = "i." + i;
     $("ai." + i).title = myHistory[id].text
@@ -140,6 +141,7 @@ function fillImages(ids) {
       $(key).src = this.src;
       $(key).width = Math.min(100, this.width);
       $(key).style.visibility='visible'
+    }
     }
   }
 }
@@ -263,10 +265,14 @@ window.onload = function() {
   fillIn()
   var historyHtml = ""
   for (var i = 0; i < MAX_HISTORY_LENGTH; i++) {
-    historyHtml += "<div class=diagramEntry>"
+    historyHtml += "<div class=historyEntry>"
                  + "<a id=\"ai." + i + "\"> "  
                  + "<img id=\"i." + i + "\" width=100 style='visibility:hidden' "
-                 + "onclick='choose(" + i + ")'/></a></div>"
+                 + "onclick='choose(" + i + ")'/></a>"
+                 + "<div class='overlay' align='right'>"
+                 + "<div onclick='alert(\"" + i + ": ignore\")'>&times;&nbsp;</div>"
+                 + "</div>"
+                 + "</div>"
   }
   $("history").innerHTML = historyHtml
   showHistory()
