@@ -67,8 +67,6 @@ function justShow(id) {
 
 idNumber = (i) => $("i."+i).src.match("/([^\\./]+)\\.png")[1]
 
-choose = (i) => justShow(idNumber(i))
-
 function sortByDate(map) {
   var a = []
   for (key in map) {
@@ -106,12 +104,24 @@ var myHistory = getHistory();
 
 saveHistory = () => localStorage.history = JSON.stringify(myHistory)
 
-function addToHistory(id, text) {
-  if (!myHistory[id]) myHistory[id] = {};
+touch = (id) => {
   myHistory[id].date = new Date().getTime();
-  myHistory[id].text = text
   saveHistory()
   showHistory()
+}
+
+
+choose = (i) => {
+  let id = idNumber(i)
+  justShow(id)
+  touch(id)
+}
+
+
+function addToHistory(id, text) {
+  if (!myHistory[id]) myHistory[id] = {};
+  myHistory[id].text = text
+  touch(id)
 }
 
 deleteFromHistory = (i) => {
