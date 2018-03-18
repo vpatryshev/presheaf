@@ -93,20 +93,10 @@ var MAX_HISTORY_LENGTH = 1000
 function getHistory() {
   if (!localStorage.history) {
     localStorage.history = "{}"
-    var cookie = document.cookie;
-    if (!cookie) return {};
-    var matches = cookie.match(/(^|;)\s*History=([^;]+)/);
-    if (!matches) return {};
-    var ids = matches[2].split(",");
-    var history = {};
-    for (i = 0; i < ids.length; i++) {
-      if (ids[i] != 'length') {
-        history[ids[i]] = {date: MAX_HISTORY_LENGTH * 100 - i, text: ''}
-      }
-    }
-    localStorage.history = JSON.stringify(history);
   }
-  return JSON.parse(localStorage.history)
+  var found = JSON.parse(localStorage.history)
+  delete found[undefined]
+  return found
 }
 
 var myHistory = getHistory();
@@ -134,7 +124,7 @@ function addToHistory(id, text) {
 }
 
 deleteFromHistory = (i) => {
-  delete myHistory[idNumber(i)]
+  myHistory[idNumber(i)].deleted=new Date().getTime();
   saveHistory()
   showHistory()
 }
@@ -157,13 +147,14 @@ function fillImages(ids) {
   var loadedImages = [];
 
   for (i = 0; i < ids.length; i++) {
-    var id = ids[i];
-    if (id) {
+    const id = ids[i]
+    const hel = myHistory[id]
+    if (id && !hel.deleted) {
       loadedImages[i] = image(id);
       loadedImages[i].id = "i." + i;
       var ref = _("ai." + i)
       if (ref) {
-        ref.title = myHistory[id].text
+        ref.title = hel.text
         loadedImages[i].onload = function() {
           const key = this.id
           const el = _(key)
@@ -171,7 +162,6 @@ function fillImages(ids) {
           el.width = Math.min(100, this.width);
           show("h"+key)
           show(key)
-
         }
       }
     }

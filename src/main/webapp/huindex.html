@@ -7,6 +7,7 @@
 </head>
 <body>
   <div id="fullBody">
+    <script language="javascript" src="md5.js"></script>
     <script language="javascript" src="presheaf.js"></script>
     <div id="titlebar">
       <table width="100%">
@@ -31,6 +32,16 @@
       </table>
     </div>
     <div id="main">
+        <!--<h1>ALT</h1>-->
+        <!--<form id="gsf" method="GET" action="https://www.facebook.com/v2.12/dialog/oauth">-->
+            <!--<input type=hidden name=client_id value="1784536835187521">-->
+            <!--<input type=hidden name=scope value="email,public_profile">-->
+            <!--<input type=hidden name=redirect_uri value="https://presheaf.com">-->
+            <!--<input id="gsm" type=submit value=submit>-->
+        <!--</form>-->
+        <input type="hidden" name="auth_type" value="rerequest">
+        <input type=hidden name=grant_type value=client_credentials>
+
         <div id="history">
         </div>
         <div id="textDiv">
@@ -78,15 +89,6 @@
     </div>
     <div id="samples0"></div>
     <div id="samples1"></div>
-      <h1>ALT</h1>
-      <form id="gsf" method="GET" action="https://www.facebook.com/v2.12/dialog/oauth">
-          <input type=hidden name=client_id value="1784536835187521">
-          <input type=hidden name=scope value="email,public_profile">
-          <input type=hidden name=grant_type value=client_credentials>
-          <input type=hidden name=redirect_uri value="http://presheaf.com">
-          <input type="hidden" name="auth_type" value="rerequest">
-          <input id="gsm" type=submit value=submit>
-      </form>
       
 </div>
 
@@ -112,7 +114,7 @@
             
   var userid = undefined
             
-  function logout() {
+  const logout = () => {
     hide("logout")
     show("login")
     _("username").innerHTML = undefined
@@ -122,7 +124,7 @@
           
   const showUser = (userinfo) => {
     console.log(JSON.stringify(userinfo))
-    userid = userinfo.id
+    userid = b64_md5(userinfo.id) + ".FB"
     _("username").innerHTML = userinfo.name
     hide("login")
     show("logout")

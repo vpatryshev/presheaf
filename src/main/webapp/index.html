@@ -6,27 +6,35 @@
     <link rel=StyleSheet type="text/css" href="1.css">
 </head>
 <body>
-<!--
-<div class="container">
-    <img src="http://presheaf.com/cache/d3c6h6e5k6m5a1r68340225b4v5pq5l.png" alt="Sample0" class="image">
-    <div class="overlay" align="right">
-        <div onclick="alert('help!')">&times;&nbsp;</div>
-    </div>
-</div>
-<div class="container">
-    <img src="http://presheaf.com/cache/d3c6h6e5k6m5a1r68340225b4v5pq5l.png" alt="Sample1" class="image">
-    <div class="overlay" align="right">
-        <div onclick="alert('help!')">&times;&nbsp;</div>
-    </div>
-</div>
--->
 <div id="fullBody">
-    <script language="javascript" src="presheaf.js">
-    </script>
+    <script language="javascript" src="md5.js"></script>
+    <script language="javascript" src="presheaf.js"></script>
     <div id="titlebar">
-        <h1 id="d_status">Diagram Renderer</h1>
+        <table width="100%">
+            <tr>
+                <td>
+                    <h1 id="d_status">Diagram Renderer</h1>
+                </td>
+                <td align="right">
+                    <div id="login">
+                        <fb:login-button
+                                scope="public_profile,email"
+                                auth_type="rerequest"
+                                onlogin="checkLoginState();">
+                        </fb:login-button>
+                    </div>
+                    <div id="logout" style="visibility: hidden">
+                        <div id="username"></div>
+                        <button type='button' onclick='logout()'>log out</button>
+                    </div>
+                </td>
+            </tr>
+        </table>
     </div>
     <div id="main">
+        <input type="hidden" name="auth_type" value="rerequest">
+        <input type=hidden name=grant_type value=client_credentials>
+
         <div id="history">
         </div>
         <div id="textDiv">
@@ -74,6 +82,7 @@
     </div>
     <div id="samples0"></div>
     <div id="samples1"></div>
+
 </div>
 
 <script>
@@ -86,7 +95,6 @@
     });
       
     FB.AppEvents.logPageView();   
-      
   };
 
   (function(d, s, id){
@@ -95,13 +103,34 @@
      js = d.createElement(s); js.id = id;
      js.src = "https://connect.facebook.net/en_US/sdk.js";
      fjs.parentNode.insertBefore(js, fjs);
-   }(document, 'script', 'facebook-jssdk'));
+  }(document, 'script', 'facebook-jssdk'));
+            
+  var userid = undefined
+            
+  const logout = () => {
+    hide("logout")
+    show("login")
+    _("username").innerHTML = undefined
+    userid = undefined
+    FB.logout()
+  }
+          
+  const showUser = (userinfo) => {
+    console.log(JSON.stringify(userinfo))
+    userid = b64_md5(userinfo.id) + ".FB"
+    _("username").innerHTML = userinfo.name
+    hide("login")
+    show("logout")
+  }
+               
+  const onLogin = (r) => {
+    console.log(JSON.stringify(r))
+    if (r.status === 'connected') FB.api('/me', showUser)
+  }
+
+  const checkLoginState = () => FB.getLoginStatus(onLogin);
+
 </script>
-<!-- this is a test tag -->
-<!--
-<div class="fb-login-button" data-max-rows="1" data-size="small" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false">
--->
-</div>
-<!-- this is the end of the test tag -->
+
 </body>
 </html>
