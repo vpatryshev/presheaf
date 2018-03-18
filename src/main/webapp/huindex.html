@@ -6,27 +6,29 @@
     <link rel=StyleSheet type="text/css" href="1.css">
 </head>
 <body>
-<div id="fullBody">
-    <script language="javascript" src="presheaf.js">
-    </script>
+  <div id="fullBody">
+    <script language="javascript" src="presheaf.js"></script>
     <div id="titlebar">
-        <table width="100%"><tr><td>
+      <table width="100%">
+        <tr>
+          <td>
             <h1 id="d_status">Diagram Renderer</h1>
-        </td>
-            <td>
-        <td align="right">
-                <fb:login-button
-                        scope="public_profile,email"
-                        onlogin="checkLoginState();">
-                </fb:login-button></td>
-            <script>
-function checkLoginState() {
-  FB.getLoginStatus(function(response) {
-    alert(response.status + "\nuser " + response.authResponse.userID);
-  });
-}            </script>
-        </td>
-        </tr></table>
+          </td>
+          <td align="right">
+            <div id="login">
+              <fb:login-button
+                scope="public_profile,email"
+                auth_type="rerequest"
+                onlogin="checkLoginState();">
+              </fb:login-button>
+            </div>
+            <div id="logout" style="visibility: hidden">
+              <div id="username"></div>
+              <button type='button' onclick='logout()'>log out</button>
+            </div>
+          </td>
+        </tr>
+      </table>
     </div>
     <div id="main">
         <div id="history">
@@ -76,6 +78,16 @@ function checkLoginState() {
     </div>
     <div id="samples0"></div>
     <div id="samples1"></div>
+      <h1>ALT</h1>
+      <form id="gsf" method="GET" action="https://www.facebook.com/v2.12/dialog/oauth">
+          <input type=hidden name=client_id value="1784536835187521">
+          <input type=hidden name=scope value="email,public_profile">
+          <input type=hidden name=grant_type value=client_credentials>
+          <input type=hidden name=redirect_uri value="http://presheaf.com">
+          <input type="hidden" name="auth_type" value="rerequest">
+          <input id="gsm" type=submit value=submit>
+      </form>
+      
 </div>
 
 <script>
@@ -88,7 +100,6 @@ function checkLoginState() {
     });
       
     FB.AppEvents.logPageView();   
-      
   };
 
   (function(d, s, id){
@@ -97,7 +108,34 @@ function checkLoginState() {
      js = d.createElement(s); js.id = id;
      js.src = "https://connect.facebook.net/en_US/sdk.js";
      fjs.parentNode.insertBefore(js, fjs);
-   }(document, 'script', 'facebook-jssdk'));
+  }(document, 'script', 'facebook-jssdk'));
+            
+  var userid = undefined
+            
+  function logout() {
+    hide("logout")
+    show("login")
+    _("username").innerHTML = undefined
+    userid = undefined
+    FB.logout()
+  }
+          
+  const showUser = (userinfo) => {
+    console.log(JSON.stringify(userinfo))
+    userid = userinfo.id
+    _("username").innerHTML = userinfo.name
+    hide("login")
+    show("logout")
+  }
+               
+  const onLogin = (r) => {
+    console.log(JSON.stringify(r))
+    if (r.status === 'connected') FB.api('/me', showUser)
+  }
+
+  const checkLoginState = () => FB.getLoginStatus(onLogin);
+
 </script>
+
 </body>
 </html>

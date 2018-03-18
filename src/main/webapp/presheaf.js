@@ -1,30 +1,21 @@
 /**
  * Functionality for presheaf.com
  * @author Vlad Patryshev
- * 1/28/2018
+ * 3/16/2018
  */
-function $(id) {
-  return document.getElementById(id) 
-}
 
-function getInput() {
-  return $("d_in").value
-}
+const _ = (id) => document.getElementById(id) 
 
-function getFormat() {
-  var s = $("d_format")
-  return s.options[s.selectedIndex].value
-}
 
 function setState(state) {
-  $("d_status").innerHTML = state
+  _("d_status").innerHTML = state
   document.title = state
 }
 
 function error(msg) {
   setState("error")
-  $("d_error").innerHTML = msg.replace(/\n/g, "<br/>")
-  hide()
+  _("d_error").innerHTML = msg.replace(/\n/g, "<br/>")
+  hideD()
 }
 
 function srcRef(id) {
@@ -45,8 +36,26 @@ function image(id) {
   return img
 }
 
-function hide() {
-  $("d_results").style.display="none"
+function hideD() {
+  _("d_results").style.display="none"
+}
+
+const hide = (id) => {
+  const el = _(id)
+  if (el) {
+    const s = el.style
+    s.display = "none"
+    s.visibility = "hidden"
+  }
+}
+
+const show = (id) => {
+  const el = _(id)
+  if (el) {
+    const s = el.style
+    s.visibility = "visible"
+    s.display = "block"
+  }
 }
 
 function quoteRef(id) {
@@ -56,21 +65,21 @@ function quoteRef(id) {
 
 function justShow(id) {
   var ref = pdfRef(id);
-  $("d_png").src  = imgRef(id);
-  $("d_pdf").href = ref;
-  $("d_pdf_e").src = ref;
-  $("d_pdf_o").data = ref;
-  $("d_quote").value = quoteRef(id);
+  _("d_png").src  = imgRef(id);
+  _("d_pdf").href = ref;
+  _("d_pdf_e").src = ref;
+  _("d_pdf_o").data = ref;
+  _("d_quote").value = quoteRef(id);
   getSrc(id);
-  $("d_results").style.display="block"
+  _("d_results").style.display="block"
 }
 
-idNumber = (i) => $("i."+i).src.match("/([^\\./]+)\\.png")[1]
+idNumber = (i) => _("i."+i).src.match("/([^\\./]+)\\.png")[1]
 
 function sortByDate(map) {
   var a = []
   for (key in map) {
-    if (map.hasOwnProperty(key))
+    if (key && map.hasOwnProperty(key))
     a.push(key)
   }
 
@@ -125,7 +134,6 @@ function addToHistory(id, text) {
 }
 
 deleteFromHistory = (i) => {
-//  $("he."+i).innerHTML = ""
   delete myHistory[idNumber(i)]
   saveHistory()
   showHistory()
@@ -153,21 +161,24 @@ function fillImages(ids) {
     if (id) {
       loadedImages[i] = image(id);
       loadedImages[i].id = "i." + i;
-      var ref = $("ai." + i)
+      var ref = _("ai." + i)
       if (ref) {
         ref.title = myHistory[id].text
         loadedImages[i].onload = function() {
-          let key = this.id;
-          $(key).src = this.src;
-          $(key).width = Math.min(100, this.width);
-          $(key).style.visibility='visible'
+          const key = this.id
+          const el = _(key)
+          el.src = this.src;
+          el.width = Math.min(100, this.width);
+          show("h"+key)
+          show(key)
+
         }
       }
     }
   }
 }
 
-function show(diagram, sourceText) {
+function showD(diagram, sourceText) {
   setState("Here's your diagram.")
   justShow(diagram.id)
   addToHistory(diagram.id, sourceText)
@@ -195,7 +206,7 @@ function xhr(uri, onwait, onload, onerror) {
 
 function getSrc(id) {
   xhr(srcRef(id), function(){}, function(text) {
-    $("d_in").value = text
+    _("d_in").value = text
   }, function(msg) { error(msg)}
   )
 }
@@ -204,7 +215,7 @@ function send(input, format) {
   xhr("dws?format=" + format + "&in=" + encodeURIComponent(input),
       function() {
         setState("please wait...")
-        $("d_error").innerHTML = ""
+        _("d_error").innerHTML = ""
       },
       function(text) {
         console.log("Got response <<<" + text + ">>>")
@@ -214,18 +225,19 @@ function send(input, format) {
         } else {
           response.image = image(response.id)
           response.image.onload = function() {
-            show(response, input)
+            showD(response, input)
           }
         }
       },
-      function(msg) {
-        error(msg)
-      }
+      error
   )
 }
 
 function commit() {
-  send(getInput(), getFormat())
+  const input = _("d_in").value
+  const fc = _("d_format")
+  const format =  fc.options[fc.selectedIndex].value
+  send(input, format)
 }
 
 function fillSamples(sources) {
@@ -233,7 +245,7 @@ function fillSamples(sources) {
   for (i = 0; i < sources.length; i++) {
     var id = sources[i].id
     if (id) {
-      $("samples" + i % 2).innerHTML += "<div class='diagramEntry' id='s.i." + id + "'/>"
+      _("samples" + i % 2).innerHTML += "<div class='diagramEntry' id='s.i." + id + "'/>"
       loadedImages[i] = image(id)
       loadedImages[i].id = "i." + id
       loadedImages[i].alt = sources[i].source
@@ -247,7 +259,7 @@ function setListeners(image, id) {
   image.onclick = Function('justShow("' + id + '")')
   image.onload = function() {
     this.width = Math.min(100, this.width)
-    $('s.' + this.id).appendChild(this)
+    _('s.' + this.id).appendChild(this)
   }
 }
 
@@ -255,7 +267,7 @@ function fillIn() {
   xhr("dws?format=xy&in=X",
       function() {},
       function(text) {
-        $("d_version").innerHTML = eval("(" + text + ")").version
+        _("d_version").innerHTML = eval("(" + text + ")").version
       },
       function(msg) {
         error(msg)
@@ -285,7 +297,7 @@ function getArg(name) {
 }
 
 historyFrag = (i) =>
-                   "<div class=historyEntry id=\"he." + i + "\">"
+                   "<div class=historyEntry id=\"hi." + i + "\"  style='display:none'>"
                  + "<a id=\"ai." + i + "\" onclick='choose(" + i + ")'> "  
                  + "<img id=\"i." + i + "\" width=100 style='visibility:hidden' />"
                  + "<div class='overlay'>"
@@ -299,7 +311,7 @@ redrawHistory = () => {
   for (var i = 0; i < MAX_HISTORY_LENGTH; i++) {
     historyHtml += historyFrag(i)
   }
-  $("history").innerHTML = historyHtml
+  _("history").innerHTML = historyHtml
   showHistory()
 }
 
