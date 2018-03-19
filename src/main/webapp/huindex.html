@@ -8,7 +8,7 @@
 <body>
   <div id="fullBody">
     <script language="javascript" src="md5.js"></script>
-    <script language="javascript" src="presheaf.js"></script>
+    <script language="javascript" src="huipresheaf.js"></script>
     <div id="titlebar">
       <table width="100%">
         <tr>
@@ -93,6 +93,23 @@
 </div>
 
 <script>
+          
+  const showUser = (userinfo) => {
+    console.log(JSON.stringify(userinfo))
+    userid = b64_md5(userinfo.id) + ".FB"
+    _("username").innerHTML = userinfo.name
+    hide("login")
+    show("logout")
+  }
+               
+  const onLogin = (r) => {
+    console.log(JSON.stringify(r))
+    if (r.status === 'connected') FB.api('/me', showUser)
+  }
+
+  const checkLoginState = () => FB.getLoginStatus(onLogin);
+
+
   window.fbAsyncInit = function() {
     FB.init({
       appId      : '1784536835187521',
@@ -102,6 +119,9 @@
     });
       
     FB.AppEvents.logPageView();   
+      
+    checkLoginState()
+
   };
 
   (function(d, s, id){
@@ -121,21 +141,6 @@
     userid = undefined
     FB.logout()
   }
-          
-  const showUser = (userinfo) => {
-    console.log(JSON.stringify(userinfo))
-    userid = b64_md5(userinfo.id) + ".FB"
-    _("username").innerHTML = userinfo.name
-    hide("login")
-    show("logout")
-  }
-               
-  const onLogin = (r) => {
-    console.log(JSON.stringify(r))
-    if (r.status === 'connected') FB.api('/me', showUser)
-  }
-
-  const checkLoginState = () => FB.getLoginStatus(onLogin);
 
 </script>
 

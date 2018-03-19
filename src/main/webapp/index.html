@@ -32,6 +32,13 @@
         </table>
     </div>
     <div id="main">
+        <!--<h1>ALT</h1>-->
+        <!--<form id="gsf" method="GET" action="https://www.facebook.com/v2.12/dialog/oauth">-->
+        <!--<input type=hidden name=client_id value="1784536835187521">-->
+        <!--<input type=hidden name=scope value="email,public_profile">-->
+        <!--<input type=hidden name=redirect_uri value="https://presheaf.com">-->
+        <!--<input id="gsm" type=submit value=submit>-->
+        <!--</form>-->
         <input type="hidden" name="auth_type" value="rerequest">
         <input type=hidden name=grant_type value=client_credentials>
 
@@ -86,6 +93,23 @@
 </div>
 
 <script>
+          
+  const showUser = (userinfo) => {
+    console.log(JSON.stringify(userinfo))
+    userid = b64_md5(userinfo.id) + ".FB"
+    _("username").innerHTML = userinfo.name
+    hide("login")
+    show("logout")
+  }
+               
+  const onLogin = (r) => {
+    console.log(JSON.stringify(r))
+    if (r.status === 'connected') FB.api('/me', showUser)
+  }
+
+  const checkLoginState = () => FB.getLoginStatus(onLogin);
+
+
   window.fbAsyncInit = function() {
     FB.init({
       appId      : '1784536835187521',
@@ -95,6 +119,9 @@
     });
       
     FB.AppEvents.logPageView();   
+      
+    checkLoginState()
+
   };
 
   (function(d, s, id){
@@ -114,21 +141,6 @@
     userid = undefined
     FB.logout()
   }
-          
-  const showUser = (userinfo) => {
-    console.log(JSON.stringify(userinfo))
-    userid = b64_md5(userinfo.id) + ".FB"
-    _("username").innerHTML = userinfo.name
-    hide("login")
-    show("logout")
-  }
-               
-  const onLogin = (r) => {
-    console.log(JSON.stringify(r))
-    if (r.status === 'connected') FB.api('/me', showUser)
-  }
-
-  const checkLoginState = () => FB.getLoginStatus(onLogin);
 
 </script>
 

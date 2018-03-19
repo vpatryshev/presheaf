@@ -9,7 +9,7 @@ case class Diagram(
                     source: String,
                     img: File,
                     pdf: File,
-                    log: Iterable[Node] = Nil) {}
+                    log: Iterable[Node] = Nil)
 
 object Diagram {
   def bad(explanation: String): Nothing = throw new Bad(explanation)
