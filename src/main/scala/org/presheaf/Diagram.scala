@@ -2,16 +2,19 @@ package org.presheaf
 
 import java.io.File
 
-import scala.xml.Node
-
-case class Diagram(
-                    id: String,
-                    source: String,
-                    img: File,
-                    pdf: File,
-                    log: Iterable[Node] = Nil)
+class Diagram(
+              val id: String,
+              val source: String,
+              val img: File,
+              val pdf: File,
+              val log: Iterable[String] = Nil) {
+  override def toString: String =
+    s"Diagram($id, $source, $img, $pdf, ${log.mkString("\n")})"
+}
 
 object Diagram {
+  
+    
   def bad(explanation: String): Nothing = throw new Bad(explanation)
 
   class Bad(explanation: String) extends RuntimeException(explanation) {}

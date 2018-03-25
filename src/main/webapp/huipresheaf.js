@@ -49,10 +49,8 @@ const show = (id) => {
   }
 }
 
-function quoteRef(id) {
-  return '<a href="' + getUrl() + '?d=' + id + '"><img src="http://presheaf.com/' + imgRef(id) +
-         '" title="click to go to presheaf.com for editing"/></a>'
-}
+const quoteRef = (id) => ('<a href="' + getUrl() + '?d=' + id + '"><img src="http://presheaf.com/' + imgRef(id) +
+         '" title="click to go to presheaf.com for editing"/></a>')
 
 function justShow(id) {
   var ref = pdfRef(id)
@@ -205,7 +203,7 @@ function httpPost(uri, data, onwait, onload, onerror) {
       }
     }
   }
-  xhr.open("POSt", uri)
+  xhr.open("POST", uri)
   xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
   xhr.send(JSON.stringify(data))
   onwait()

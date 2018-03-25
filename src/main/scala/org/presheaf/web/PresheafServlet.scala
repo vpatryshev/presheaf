@@ -4,7 +4,6 @@ import javax.servlet.http._
 import org.presheaf._
 import org.presheaf.web._
 
-import scala.xml._
 import java.io._
 import Diagram._
 
@@ -15,8 +14,6 @@ import Diagram._
 abstract class PresheafServlet extends HttpServlet {
   def notNull(value: String, default: String) = if (value == null) default else value
   def ref(file: File) = "cache/" + file.getName
-
-  def fileAsAttr(attr: String, file: File) = new UnprefixedAttribute(attr, ref(file), Null)
 
   def process(req:HttpServletRequest) : Diagram = {
     process(req, req.getParameter("in"), req.getParameter("opt"))
@@ -40,10 +37,6 @@ abstract class PresheafServlet extends HttpServlet {
   }
 
   override def doGet(req : HttpServletRequest, res : HttpServletResponse) : Unit = {
-    res.setContentType("text/html")
-    val out:PrintWriter = res.getWriter
-    out.print(doGetXML(req).toString)
+    sys.error("oops")
   }
-
-  def doGetXML(req: HttpServletRequest) : Seq[Node] = sys.error("oops")
 }

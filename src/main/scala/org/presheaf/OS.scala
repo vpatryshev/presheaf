@@ -17,14 +17,14 @@ object OS {
     println("" + new java.util.Date + "] " + thing + "\n")
   }
 
-  def run(cmd: String): (Option[Int], String, String) = {
+  def run(cmd: String): (Int, String, String) = {
     val se = new StringBuilder
     val so = new StringBuilder
     val is = new ByteArrayInputStream("\4,\4,\4,\4".getBytes)
     val status = cmd #< is ! ProcessLogger(
       o => so append (o + "\n"),
       e => se append (e + "\n"))
-    (Option(status), so.toString, se.toString)
+    (status, so.toString, se.toString)
   }
   
   def ln(target: File, link: File) {

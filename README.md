@@ -2,6 +2,9 @@ presheaf takes your xypic diagram and returns a pdf or a png.
 
 Links:
 
+fb oauth
+https://developers.facebook.com/apps/1784536835187521/settings/basic/
+
 xygyide: http://texdoc.net/texmf-dist/doc/generic/xypic/xyguide.pdf
 xyjax: http://sonoisa.github.io/xyjax/xyjax.html
 drawing tex entities: http://detexify.kirelabs.org/classify.html

@@ -1,26 +1,26 @@
 package org.presheaf.web
 
-import org.presheaf.{OS, DiagramSamples, Diagram}
+import org.presheaf.{Diagram, DiagramSamples, OS}
 import org.presheaf.web.HtmlSnippets._
 import javax.servlet.http._
 
-import xml.Node
+import scala.io.Source
+import scala.util.parsing.json.JSON
 import java.io.File
 
 class DiagramService extends PresheafServlet {
   val xyError = ".*Xy-pic error:(.*)\\\\xyerror.*".r
 
   val Q = "\""
-  def quote(s: String) = Q + s.replaceAll(Q, "").replaceAll("\\\\", "\\\\\\\\").replaceAll("\n", "\\\\n") + Q
+  def quote(s: String): String = Q + s.replaceAll(Q, "").replaceAll("\\\\", "\\\\\\\\").replaceAll("\n", "\\\\n") + Q
   def json(s: String): String = quote(s)
   def json(nvp: (String,_)): String = json(nvp._1) + ":" + json(nvp._2.toString)
   def json(map: Map[String, _]): String = map.map(json).mkString("{", ",", "}")
   def json(seq: Iterator[String]): String = seq.map(json).mkString("[", ",\n", "]")
   def json(seq: Iterable[String]): String = json(seq.iterator)
 
-  def errorLog(logs: Iterable[Node]) = {
-    val fullLog = logs.mkString("<br/>").replaceAll("\\\\", "\\\\").replaceAll("\"", "\\\"")
-    println(s"WTF is going on... $fullLog\n\n\n")
+  def errorLog(log: Iterable[String]): Map[String, String] = {
+    val fullLog = log.mkString("\n").replaceAll("\\\\", "\\\\").replaceAll("\"", "\\\"")
     OS.log(fullLog)
     fullLog match {
       case xyError(msg) =>
@@ -37,18 +37,57 @@ class DiagramService extends PresheafServlet {
 
   def produce(req:HttpServletRequest, diagram:String): String = {
     //return Map("error" -> "Sorry, this is broken now, working on it - Vlad, 1:05pm (PDT), 10/14/2011")
-    val Diagram(id, source, img, pdf, logs) = process(req, diagram, req.getParameter("opt"))
+    val d = process(req, diagram, req.getParameter("opt"))
     json(
-      if (logs.isEmpty) {
+      if (d.log.isEmpty) {
         Map(
-          "id"      -> id,
-          "source"   -> quote(source),
+          "id"      -> d.id,
+          "source"   -> quote(d.source),
           "version"  -> version)
       }
       else {
-        errorLog(logs)
+        errorLog(d.log)
       }
     )
+  }
+  
+  override def doPost(req: HttpServletRequest, res: HttpServletResponse) : Unit = {
+    res.setContentType("application/json;charset=UTF-8")
+    val content = Source.fromInputStream(req.getInputStream, "UTF-8").getLines.mkString("")
+    try {
+      JSON.parseFull(content) foreach { 
+        case json: Map[String, Any] =>
+          println(json)
+          json.get("op") match {
+            case Some("update") =>
+              val value = json.get("value")
+              println(s"an update: $value")
+              value match {
+                case Some(history: Map[_, _]) if history.nonEmpty =>
+                  println(s"good update: $history")
+                case other =>
+                  println(s"bad update value $other, res=$res")
+                  res.sendError(505, s"bad update value $other")
+              }
+            case other =>
+              res.sendError(503, s"bad request $json")
+          }
+        case other => println(s"bad rq $other")
+          res.sendError(504, s"bad request $other")
+          
+      }
+      
+    } catch {
+      case bd: Diagram.Bad =>
+        OS.log(s"Diagram post service: it did not work for $content: bd.getMessage")
+        res.sendError(501, bd.getMessage)
+
+      case e: Throwable   =>
+        OS.log("Diagram post service: an exception")
+        e.printStackTrace()
+        res.getWriter.print(json(Map("error" -> e.getMessage)))
+        res.sendError(502, "Error while processing the diagram: " + e.getMessage)
+    }
   }
 
   override def doGet(req:HttpServletRequest, res:HttpServletResponse) : Unit = {
@@ -73,13 +112,13 @@ class DiagramService extends PresheafServlet {
     } catch {
       case bd: Diagram.Bad => 
         OS.log("Diagram service: bad diagram, " + bd.getMessage)
-        res.sendError(500, bd.getMessage)
+        res.sendError(503, bd.getMessage)
       
       case e: Throwable   => 
         OS.log("Diagram service: an exception")
         e.printStackTrace()
         res.getWriter.print(json(Map("error" -> e.getMessage)))
-        res.sendError(500, "Error while processing the diagram: " + e.getMessage)
+        res.sendError(504, "Error while processing the diagram: " + e.getMessage)
     }
   }
 }
