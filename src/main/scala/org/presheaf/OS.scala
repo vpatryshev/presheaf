@@ -43,7 +43,7 @@ object OS {
     run("whoami")._2.toString.trim
   }
 
-  val IsHome = new Regex("/home/(\\w+)")
+  val IsHome = "/home/(\\w+)".r
 
   def homeDir: String = {
     def findIt(file: File) : Option[File] = {

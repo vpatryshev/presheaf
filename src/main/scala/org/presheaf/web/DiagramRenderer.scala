@@ -11,7 +11,7 @@ import Diagram._
  * xypic Diagram Renderer
  * Produces a pdf and a png file
  */
-class DiagramRenderer(val cache: File) {
+case class DiagramRenderer(val cache: File) {
 
   def toHtml(action: (String, String), results: (Int, String, String)): Seq[String] = {
     results._1 match {
@@ -63,7 +63,6 @@ class DiagramRenderer(val cache: File) {
           else             doWithScript(sourceDiagram, id)
       OS.log(s"Renderer.process: $result.")
       result
-    }
   }
 
   def doWithScript(source: String, name: String): Diagram = {

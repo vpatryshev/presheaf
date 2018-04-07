@@ -16,16 +16,15 @@ abstract class PresheafServlet extends HttpServlet {
   def ref(file: File) = "cache/" + file.getName
 
   def process(req:HttpServletRequest) : Diagram = {
-    process(req, req.getParameter("in"), req.getParameter("opt"))
+    process(req, req.getParameter("in"))
   }
 
-  def process(req:HttpServletRequest, diagram: String, opt: String) : Diagram = {
+  def process(req:HttpServletRequest, diagram: String) : Diagram = {
     if (diagram == null || diagram.isEmpty) bad("no diagram to render")
     OS.log("Rendering diagram \"" + diagram + "\"")
-    renderer(req:HttpServletRequest).process(diagram, opt)
+    val dir = wd(req)
+    DiagramRenderer(dir).process(diagram)
   }
-
-  def renderer(req:HttpServletRequest) = new DiagramRenderer(wd(req:HttpServletRequest))
 
   def wd(req:HttpServletRequest) = {
     val here = new File(req.getSession.getServletContext.getRealPath("x")).getParentFile
