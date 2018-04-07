@@ -5,7 +5,6 @@ import org.presheaf.{Diagram, OS}
 
 import collection.mutable.ListBuffer
 import util.matching.Regex
-import javax.servlet.ServletContext
 import Diagram._
 
 /**
@@ -54,11 +53,7 @@ class DiagramRenderer(val cache: File) {
     new File(cache, name + ".tex")
   }
 
-  def process(sourceDiagram: String, opt: String) : Diagram = {
-
-    if (sourceDiagram == null) {
-      bad("No diagram provided")
-    } else {
+  def process(sourceDiagram: String) : Diagram = {
       OS.log("decoded '" + sourceDiagram + "' to '" + sourceDiagram + "'")
       val id = idFor(sourceDiagram)
       val img: File = new File(cache, id + ".png")
@@ -102,28 +97,12 @@ class DiagramRenderer(val cache: File) {
 
 object DiagramRenderer {
 
-  val IsHome = new Regex("/home/(\\w+)")
-
-  def homeDir: String = {
-    def findIt(file: File) : Option[File] = {
-      file.getAbsolutePath match {
-      case IsHome(owner) => Some(file)
-      case _ => if (file.getAbsolutePath.contains("/")) findIt(file.getParentFile) else None
-    }
-    }
-    findIt(new File(new File(".").getAbsolutePath)).get.getAbsolutePath
-  }
-
   lazy val binPath = "/usr/bin/"//appPath + "bin/"
 
   def env:Map[String, String] = Map(
 //    "LD_LIBRARY_PATH" -> libPath,
 //    "TEXINPUTS" -> texPath
     )
-
-  def configure(context: ServletContext): Unit = {
-    OS.log("Currently in " + new File(".").getAbsolutePath)
-  }
 
   import java.security._
   private val digest = MessageDigest.getInstance("MD5")

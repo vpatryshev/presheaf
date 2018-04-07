@@ -42,4 +42,17 @@ object OS {
   def whoami: String = {
     run("whoami")._2.toString.trim
   }
+
+  val IsHome = new Regex("/home/(\\w+)")
+
+  def homeDir: String = {
+    def findIt(file: File) : Option[File] = {
+      file.getAbsolutePath match {
+        case IsHome(owner) => Some(file)
+        case _ => if (file.getAbsolutePath.contains("/")) findIt(file.getParentFile) else None
+      }
+    }
+    findIt(new File(new File(".").getAbsolutePath)).get.getAbsolutePath
+  }
+
 }

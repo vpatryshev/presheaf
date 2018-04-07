@@ -36,7 +36,6 @@ class DiagramService extends PresheafServlet {
   }
 
   def produce(req:HttpServletRequest, diagram:String): String = {
-    //return Map("error" -> "Sorry, this is broken now, working on it - Vlad, 1:05pm (PDT), 10/14/2011")
     val d = process(req, diagram, req.getParameter("opt"))
     json(
       if (d.log.isEmpty) {
