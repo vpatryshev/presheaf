@@ -11,19 +11,14 @@ import Diagram._
  * General class for all our (three) servlets
  */
 
-abstract class PresheafServlet extends HttpServlet {
-  def notNull(value: String, default: String) = if (value == null) default else value
-  def ref(file: File) = "cache/" + file.getName
+abstract class PresheafServlet extends HttpServlet with PresheafOps {
 
-  def process(req:HttpServletRequest) : Diagram = {
-    process(req, req.getParameter("in"))
-  }
 
   def process(req:HttpServletRequest, diagram: String) : Diagram = {
-    if (diagram == null || diagram.isEmpty) bad("no diagram to render")
+    require(diagram != null && diagram.nonEmpty, "no diagram to render")
     OS.log("Rendering diagram \"" + diagram + "\"")
     val dir = wd(req)
-    DiagramRenderer(dir).process(diagram)
+    process(dir, diagram)
   }
 
   def wd(req:HttpServletRequest) = {

@@ -1,7 +1,7 @@
 package org.presheaf.web
 
 import org.presheaf.{Diagram, DiagramSamples, OS}
-import org.presheaf.web.HtmlSnippets._
+import org.presheaf.BuildInfo._
 import javax.servlet.http._
 
 import scala.io.Source
@@ -9,31 +9,6 @@ import scala.util.parsing.json.JSON
 import java.io.File
 
 class DiagramService extends PresheafServlet {
-  val xyError = ".*Xy-pic error:(.*)\\\\xyerror.*".r
-
-  val Q = "\""
-  def quote(s: String): String = Q + s.replaceAll(Q, "").replaceAll("\\\\", "\\\\\\\\").replaceAll("\n", "\\\\n") + Q
-  def json(s: String): String = quote(s)
-  def json(nvp: (String,_)): String = json(nvp._1) + ":" + json(nvp._2.toString)
-  def json(map: Map[String, _]): String = map.map(json).mkString("{", ",", "}")
-  def json(seq: Iterator[String]): String = seq.map(json).mkString("[", ",\n", "]")
-  def json(seq: Iterable[String]): String = json(seq.iterator)
-
-  def errorLog(log: Iterable[String]): Map[String, String] = {
-    val fullLog = log.mkString("\n").replaceAll("\\\\", "\\\\").replaceAll("\"", "\\\"")
-    OS.log(fullLog)
-    fullLog match {
-      case xyError(msg) =>
-        Map(
-            "error"     -> msg,
-            "version"  -> version)
-      case _ =>
-        Map(
-            "error"     -> fullLog,
-            "version"  -> version)
-
-    }
-  }
 
   def produce(req:HttpServletRequest, diagram:String): String = {
     val d = process(req, diagram)
@@ -95,14 +70,6 @@ class DiagramService extends PresheafServlet {
 
       req.getParameter("op") match {
         case "samples" => res.getWriter.print(DiagramSamples.samples.map(produce(req, _)).mkString("[", ",\n", "]"))
-
-        case "aspng" =>
-          res.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY)
-          res.setHeader("Location", ref(process(req).img))
-
-        case "aspdf" =>
-          res.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY)
-          res.setHeader("Location", ref(process(req).pdf))
 
         case _ =>
          val result = produce(req, req.getParameter("in"))

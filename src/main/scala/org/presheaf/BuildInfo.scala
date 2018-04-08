@@ -1,10 +1,6 @@
-package org.presheaf.web
+package org.presheaf
 
-import java.util.Date
-
-import org.presheaf.Res
-
-object HtmlSnippets {
+object BuildInfo {
   val BuildFile: String = "/buildno.txt"
 
   def buildNo: String = try {
